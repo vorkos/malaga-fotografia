@@ -8,115 +8,194 @@
 ## Project Identity
 
 - **Name:** Málaga Fotografía
-- **Owner/Photographer:** Kostiantyn V. (Kostya) — boss138@gmail.com
+- **Owner/Photographer:** Kostiantyn V. (Kostya) — boss138@gmail.com · photo@vorkos.dev
 - **Speciality:** Portrait / boudoir / fine-art nude — Málaga, Spain
 - **Branding:** "KV" monogram · Cormorant Garamond + Archivo fonts
 - **Palette:** near-black `#0c0b0a` · warm off-white `#ece6dc` · gold `#d8a24a`
+- **Contact:** WhatsApp +34 674 474 418 · Instagram @ph.kostiantyn.v
 
 ---
 
-## Hosting & Repo
+## Constraints
 
-- **Platform:** Cloudflare Pages (connected to GitHub repo)
-- **Live URL:** https://photography.boss138.workers.dev/
-- **Repo:** github.com/vorkos/malaga-fotografia
-- **Branches:** `main` (default), `feature/initial-page`
-- **Deploy:** push to `main` → Cloudflare auto-builds. No build command. Output dir: `/`.
+- **Cloudflare free tier only** — no paid features: no Image Resizing, no Durable Objects, no premium analytics. Every solution must stay within the free plan.
 
 ---
 
-## Site Structure (single-page, bilingual ES/EN)
+## Hosting & Deploy
 
-| Section | Anchor | Notes |
-|---------|--------|-------|
-| Hero | `#top` | Eyebrow + H1 + subtext + 2 CTAs + scroll indicator |
-| About | `#about` | Intro text + portrait image slot |
-| Portfolio/Gallery | `#portfolio` | 3-page carousel, auto-advances 4.5s, pauses on hover |
-| TFP | `#tfp` | "Busco musas" — 2-column card (what I look for / what you get) |
-| Process | `#process` | 4 numbered steps |
-| Contact | `#contact` | WhatsApp + Instagram + Email buttons |
-| Footer | — | Name · tagline · @handle |
+- **Platform:** Cloudflare Workers with Static Assets binding
+- **R2 bucket:** `photos` (binding: `PHOTOS`) — 108 photos served at `/gallery/*`
+- **Live URLs:** `https://malaga-fotografia.com/` · `https://www.malaga-fotografia.com/` · `https://photography.boss138.workers.dev/`
+- **Repo:** github.com/vorkos/malaga-fotografia (branch: `main`)
+- **Deploy:** Cloudflare Builds auto-deploys on every push to `main` — no manual step needed
+- **DNS:** domain moved from Squarespace to Cloudflare nameservers (2026-06-18)
 
 ---
 
-## Contact Details (hardcoded in HTML)
-
-- **WhatsApp:** +34 674 474 418
-- **Instagram:** @ph.kostiantyn.v
-- **Email:** photo@vorkos.dev
-- **Pricing page:** malaga-fotografia.com/price · sessions from €250
-
----
-
-## File Layout
+## Repo File Layout
 
 ```
 repo root/
-├── index.html            ← deployable site (~530 KB, self-contained bundle)
-├── README.md             ← handover notes from original designer
+├── index.html            ← main portfolio (~542 KB, self-contained bundle)
+├── prices.html           ← pricing page (same bundle format)
+├── _worker.js            ← Cloudflare Worker: proxies /gallery/* from R2, delegates rest to ASSETS
+├── wrangler.jsonc        ← Worker config: name=photography, assets=., r2=photos
+├── .assetsignore         ← excludes _worker.js, wrangler.jsonc, src/, temp scripts from static assets
 ├── src/
-│   ├── Portfolio.dc.html ← editable source (dc-runtime template format)
+│   ├── Portfolio.dc.html ← designer source (dc-runtime template, NOT auto-built into index.html)
+│   ├── Prices.dc.html
 │   ├── support.js        ← dc-runtime (React + template engine, minified)
-│   └── image-slot.js     ← <image-slot> web component
+│   └── image-slot.js     ← <image-slot> web component (only used in source, not in deployed bundle)
 └── .agent/
     └── context.md        ← this file
 ```
 
-**Edit source in `src/Portfolio.dc.html`, not in `index.html` directly.**
-`index.html` is a bundler output — it re-packages `src/` + assets into one self-contained file.
+**index.html is NOT rebuilt from src/ automatically.** src/ is designer reference only. Edit index.html directly using Python byte-level scripts (see "Editing index.html" below).
 
 ---
 
-## Tech Stack
+## index.html Encoding — CRITICAL
 
-- **Runtime:** `dc-runtime` — a custom React-based template engine. Uses `<x-dc>`, `<sc-for>`, `<sc-if>` custom components and `{{ expr }}` interpolation.
-- **Web component:** `<image-slot>` — drag-and-drop image placeholder that persists via `localStorage`/sidecar. **Not suitable for production** — only stores images in the visitor's browser.
-- **Fonts:** Google Fonts (Archivo + Cormorant Garamond), loaded via `<link>` in the bundle.
+The bundle is a single-line JSON-encoded HTML string. Rules:
 
----
+| Thing | Encoding in bytes |
+|-------|------------------|
+| Attribute quotes | `\"` = bytes `0x5C 0x22` (backslash + double-quote) |
+| Forward slashes in styles/URLs | Plain `/` = byte `0x2F` (NOT escaped) |
+| Closing HTML tags (e.g. `</body>`) | `/` in template JSON, but outer HTML `</body>` is plain bytes |
+| aspect-ratio in style | `aspect-ratio:4 / 5` (plain slash, spaces around it) |
 
-## #1 Outstanding Task: Replace Image Placeholders
+**Python pattern for gallery img tag (V = vertical, H = horizontal):**
+```python
+VS = b'display:block;width:100%;aspect-ratio:4 / 5;object-fit:cover;border-radius:2px;'
+HS = b'display:block;width:100%;aspect-ratio:3 / 2;object-fit:cover;border-radius:2px;'
 
-The gallery and about section use `<image-slot>` components that only store images in the visitor's local browser — so the published site shows empty boxes.
+def tag(filename, style):
+    return b'<img src=\x5c"/gallery/' + filename.encode() + b'\x5c" alt=\x5c"\x5c" style=\x5c"' + style + b'\x5c">'
 
-**Fix:** replace each `<image-slot>` with a real `<img>` and put photos in an `images/` folder.
-
-```html
-<!-- BEFORE -->
-<image-slot id="g1" placeholder="Vertical" shape="rounded" radius="2" fit="cover"
-            style="display:block;width:100%;aspect-ratio:4 / 5;height:auto;"></image-slot>
-
-<!-- AFTER -->
-<img src="images/g1.jpg" alt=""
-     style="display:block;width:100%;aspect-ratio:4 / 5;object-fit:cover;border-radius:2px;">
+# Replace old slot with new file:
+b = b.replace(tag('OLD.jpg', VS), tag('NEW.jpg', VS), 1)
 ```
 
-### Gallery slot IDs
+When moving photos between slots, always replace the **source slot first** (to remove the duplicate), then replace the destination slot.
 
-| Page | Vertical (4:5) | Horizontal (3:2) |
-|------|----------------|-----------------|
+---
+
+## Gallery Architecture
+
+- **3 pages** in a horizontal carousel (scroll-snap, auto-advances every 4.5 s, pauses on hover)
+- Each page: **4 vertical (4:5 aspect) + 2 horizontal (3:2 aspect)** = 18 slots total
+- Photos served from R2 via Worker at `/gallery/FILENAME`
+
+### Slot IDs
+
+| Page | Vertical slots (4:5) | Horizontal slots (3:2) |
+|------|----------------------|------------------------|
 | 1 | g1, g2, g3, g4 | g5, g6 |
 | 2 | p2g1, p2g2, p2g3, p2g4 | p2g5, p2g6 |
 | 3 | p3g1, p3g2, p3g3, p3g4 | p3g5, p3g6 |
 
-Also: `about-portrait` — used in the About section (portrait orientation, tall).
+Also: **about-portrait** in the About section — currently `Z52_0569.jpg` (style: `width:100%;height:clamp(380px,46vw,520px);object-fit:cover;border-radius:3px;`)
 
-Total: **19 image slots**.
+### Static fallback (as of last update)
+
+| Slot | Photo | Orient |
+|------|-------|--------|
+| g1 | Z52_0537-small.jpg | V |
+| g2 | Z52_1162-small.jpg | V |
+| g3 | Z52_1652-small.jpg | V |
+| g4 | Z52_0924.jpg | V |
+| g5 | Z52_0461.jpg | H |
+| g6 | Z52_0383.jpg | H |
+| p2g1 | Z52_1917-small.jpg | V |
+| p2g2 | Z52_1820-small.jpg | V |
+| p2g3 | Z52_2867-small.jpg | V |
+| p2g4 | Z52_9094-small.jpg | V |
+| p2g5 | Z52_0431.jpg | H |
+| p2g6 | Z52_0446.jpg | H |
+| p3g1 | Z52_9385-small.jpg | V |
+| p3g2 | Z52_7655-small.jpg | V |
+| p3g3 | Z52_6186_DxO-small.jpg | V |
+| p3g4 | Z52_0501.jpg | V |
+| p3g5 | Z52_9221-small.jpg | H |
+| p3g6 | Z52_2638-small.jpg | H |
+
+### Random rotation (JS, injected before `</body>`)
+
+On every page load, a script in index.html shuffles V and H pools independently and reassigns all 18 gallery img src attributes. It finds imgs inside `#pf-track` by checking inline style for `4 / 5` (vertical) or `3 / 2` (horizontal).
+
+**V pool (29 photos — 3★ heroes + unrated):**
+Z52_0501, Z52_0537-small, Z52_1336, Z52_1162-small, Z52_1652-small, Z52_0924, Z52_1917-small, Z52_1820-small, Z52_2867-small, Z52_6186_DxO-small, Z52_9933-small, Z52_9385-small, Z52_9094-small, Z52_7655-small, Z52_2868-small, Z52_9756-small, Z52_9652-small, Z52_9480-small, Z52_9287-small, Z52_7827-small, Z52_7622-small, Z52_7547-small_2, Z52_0012-small, Z52_0515, Z52_0561, Z52_0631, Z52_9457-small, Z52_9087-small, Z52_8190_1-small
+
+**H pool (11 photos — 3★ heroes + 2★ greats):**
+Z52_0461, Z52_0431, Z52_0383, Z52_9221-small, Z52_2638-small, Z52_9471-small_1, Z52_0441, Z52_0446, Z52_2637-small, Z52_2615-small
 
 ---
 
-## Key Decisions & History
+## Photo Rating (completed 2026-06-18)
 
-| Date | Decision | Rationale |
-|------|----------|-----------|
-| 2026-06-18 | Created `main` and `feature/initial-page` branches | Standard GitHub workflow |
-| 2026-06-18 | Added source files from handover zip (`src/`) | Designer handed off editable source alongside built bundle |
-| 2026-06-18 | Hosting on Cloudflare Pages (not Workers) | Static site — Pages is simpler, no Worker script needed |
+Two-pass rating of all 108 R2 photos:
+- **Pass 1:** 1–5★ — photos with 3★+ survived (62 photos)
+- **Pass 2:** re-ranked 1–3★ within survivors
+  - **3★ HERO** = must-have (used in gallery + random pool)
+  - **2★ GREAT** = good (H-orientation greats in pool, V-greats excluded for quality)
+  - **1★ OK** = acceptable (not used)
+
+Rating tool was `rate.html` (served locally via `python3 -m http.server 8099`). Orientation data in `orientations.txt`.
 
 ---
 
-## Open Questions
+## _worker.js
 
-- Which photos go in which slots? (g1–g4 vertical, g5–g6 horizontal per page)
-- Custom domain planned? (currently `*.workers.dev`)
-- Should `index.html` be rebuilt from `src/` or edited directly? (bundler tooling not yet in repo)
+```js
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    if (url.pathname.startsWith('/gallery/')) {
+      const key = url.pathname.slice(1);
+      const obj = await env.PHOTOS.get(key);
+      if (!obj) return new Response('Not found', { status: 404 });
+      const headers = new Headers();
+      obj.writeHttpMetadata(headers);
+      headers.set('cache-control', 'public, max-age=31536000, immutable');
+      return new Response(obj.body, { headers });
+    }
+    return env.ASSETS.fetch(request);
+  },
+};
+```
+
+---
+
+## Pages
+
+- `/` → index.html — main portfolio (bilingual ES/EN, default: ES)
+- `/prices.html` → pricing page — sessions from €250. Contains 1 R2 photo: Z52_0501.jpg
+
+---
+
+## Site Sections (index.html)
+
+| Section | Anchor | Notes |
+|---------|--------|-------|
+| Hero | `#top` | Eyebrow + H1 + subtext + 2 CTAs + scroll indicator |
+| About | `#about` | Intro text + portrait (Z52_0569.jpg, fixed) |
+| Portfolio/Gallery | `#portfolio` | 3-page carousel, 18 slots, random rotation on load |
+| TFP | `#tfp` | "Busco musas" — 2-column card |
+| Process | `#process` | 4 numbered steps |
+| Contact | `#contact` | WhatsApp + Instagram + Email |
+| Footer | — | Name · tagline · @handle |
+
+---
+
+## Key Decisions Log
+
+| Date | Decision |
+|------|----------|
+| 2026-06-18 | Switched from Cloudflare Pages to Cloudflare Workers + R2 for photo serving |
+| 2026-06-18 | DNS moved from Squarespace to Cloudflare; www CNAME removed and rebound to Worker |
+| 2026-06-18 | Cloudflare Builds CI/CD: auto-deploys on push to main (no GitHub Actions needed) |
+| 2026-06-18 | Replaced all 19 image-slot placeholders with real R2 img tags via Python byte scripts |
+| 2026-06-18 | Rated all 108 R2 photos (2-pass system); implemented random gallery rotation on load |
+| 2026-06-18 | prices.html URL fixed: old link was `/price`, now `/prices.html` |
