@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#0c0b0a"/><text x="50" y="63" font-family="Georgia, serif" font-size="30" letter-spacing="2" fill="#d8a24a" text-anchor="middle">KV</text></svg>
+</template>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+  <script src="./image-slot.js"></script>
+  <style>
+    html{scroll-behavior:smooth;scroll-padding-top:84px}
+    body{margin:0;background:#0c0b0a}
+    ::selection{background:rgba(216,162,74,.3);color:#fff}
+    image-slot{display:block}
+    #pf-track{scrollbar-width:none;-ms-overflow-style:none}
+    #pf-track::-webkit-scrollbar{display:none}
+  </style>
+</helmet>
+
+<div style="font-family:Archivo,sans-serif;background:#0c0b0a;color:#ece6dc;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;">
+
+  <!-- NAV -->
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:16px clamp(20px,5vw,56px);background:rgba(12,11,10,0.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(236,230,220,0.08);">
+    <a href="#top" style="font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:3px;font-weight:500;color:#ece6dc;text-decoration:none;text-transform:uppercase;">Kostiantyn&nbsp;V.</a>
+    <div style="display:flex;align-items:center;gap:clamp(16px,2.4vw,34px);flex-wrap:wrap;">
+      <sc-for list="{{ t.nav }}" as="item" hint-placeholder-count="4">
+        <a href="{{ item.href }}" style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#a59c91;text-decoration:none;transition:color .25s;" style-hover="color:#d8a24a">{{ item.label }}</a>
+      </sc-for>
+      <div style="display:flex;gap:6px;margin-left:6px;">
+        <sc-if value="{{ isEs }}" hint-placeholder-val="{{ true }}">
+          <button type="button" onClick="{{ setEs }}" style="font-family:Archivo,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;padding:7px 13px;border-radius:2px;cursor:pointer;border:1px solid #d8a24a;background:#d8a24a;color:#0c0b0a;">ES</button>
+        </sc-if>
+        <sc-if value="{{ isEn }}">
+          <button type="button" onClick="{{ setEs }}" style="font-family:Archivo,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;padding:7px 13px;border-radius:2px;cursor:pointer;border:1px solid rgba(236,230,220,0.18);background:transparent;color:#968d82;">ES</button>
+        </sc-if>
+        <sc-if value="{{ isEs }}">
+          <button type="button" onClick="{{ setEn }}" style="font-family:Archivo,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;padding:7px 13px;border-radius:2px;cursor:pointer;border:1px solid rgba(236,230,220,0.18);background:transparent;color:#968d82;">EN</button>
+        </sc-if>
+        <sc-if value="{{ isEn }}">
+          <button type="button" onClick="{{ setEn }}" style="font-family:Archivo,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;padding:7px 13px;border-radius:2px;cursor:pointer;border:1px solid #d8a24a;background:#d8a24a;color:#0c0b0a;">EN</button>
+        </sc-if>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="top" style="position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:120px clamp(20px,8vw,120px) 90px;overflow:hidden;background:radial-gradient(125% 90% at 50% -10%, rgba(216,162,74,0.13) 0%, rgba(216,162,74,0.03) 35%, transparent 62%), #0c0b0a;">
+    <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg, transparent 60%, rgba(12,11,10,0.9) 100%);"></div>
+    <div style="position:relative;max-width:920px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:26px;">
+        <span style="width:42px;height:1px;background:#d8a24a;display:block;"></span>
+        <span style="font-size:12px;letter-spacing:4px;text-transform:uppercase;color:#d8a24a;">{{ t.heroEyebrow }}</span>
+      </div>
+      <h1 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(40px,7.5vw,92px);line-height:1.02;margin:0 0 28px;letter-spacing:-0.5px;color:#f3eee5;text-wrap:balance;">{{ t.heroTitle }}</h1>
+      <p style="font-weight:300;font-size:clamp(16px,1.5vw,20px);line-height:1.65;max-width:600px;margin:0 0 40px;color:#c2b9ad;">{{ t.heroSub }}</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;">
+        <a href="#tfp" style="display:inline-block;background:#d8a24a;color:#0c0b0a;padding:15px 32px;border-radius:2px;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:background .25s,transform .25s;" style-hover="background:#e7b65f;transform:translateY(-2px)">{{ t.heroCta1 }}</a>
+        <a href="#portfolio" style="display:inline-block;background:transparent;color:#ece6dc;padding:15px 32px;border:1px solid rgba(236,230,220,0.28);border-radius:2px;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:border-color .25s,color .25s;" style-hover="border-color:#d8a24a;color:#d8a24a">{{ t.heroCta2 }}</a>
+      </div>
+    </div>
+    <div style="position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;">
+      <span style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#6f675d;">Scroll</span>
+      <span style="width:1px;height:34px;background:linear-gradient(180deg,#6f675d,transparent);display:block;"></span>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" style="padding:clamp(80px,12vh,140px) clamp(20px,8vw,120px);background:#0c0b0a;">
+    <div style="display:flex;gap:clamp(40px,6vw,80px);flex-wrap:wrap;align-items:center;max-width:1180px;margin:0 auto;">
+      <div style="flex:1 1 420px;min-width:300px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:22px;">
+          <span style="width:32px;height:1px;background:#d8a24a;display:block;"></span>
+          <span style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#d8a24a;">{{ t.introLabel }}</span>
+        </div>
+        <p style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(24px,3vw,38px);line-height:1.32;margin:0 0 26px;color:#ece6dc;text-wrap:pretty;">{{ t.introBody }}</p>
+        <div style="border-left:2px solid #d8a24a;padding:6px 0 6px 20px;">
+          <p style="font-weight:300;font-size:16px;line-height:1.7;margin:0;color:#a59c91;">{{ t.promise }}</p>
+        </div>
+      </div>
+      <div style="flex:0 1 360px;min-width:260px;">
+        <image-slot id="about-portrait" placeholder="Tu retrato" shape="rounded" radius="3" fit="cover" style="width:100%;height:clamp(380px,46vw,520px);"></image-slot>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section id="portfolio" style="padding:clamp(70px,9vh,120px) clamp(20px,5vw,72px);background:#111;">
+    <div style="max-width:1320px;margin:0 auto;">
+      <div style="margin-bottom:clamp(36px,5vh,56px);max-width:640px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
+          <span style="width:32px;height:1px;background:#d8a24a;display:block;"></span>
+          <span style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#d8a24a;">{{ t.portfolioLabel }}</span>
+        </div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(32px,5vw,58px);line-height:1.04;margin:0 0 16px;color:#f3eee5;">{{ t.portfolioTitle }}</h2>
+        <p style="font-weight:300;font-size:16px;line-height:1.6;margin:0;color:#a59c91;">{{ t.portfolioSub }}</p>
+      </div>
+      <div id="pf-track" style="display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:0;">
+
+        <!-- PAGE 1 -->
+        <div style="flex:none;width:100%;scroll-snap-align:start;display:flex;flex-direction:column;gap:16px;">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="g1" placeholder="Vertical" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:4 / 5;height:auto;"></image-slot></div>
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="g2" placeholder="Vertical" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:4 / 5;height:auto;"></image-slot></div>
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="g3" placeholder="Vertical" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:4 / 5;height:auto;"></image-slot></div>
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="g4" placeholder="Vertical" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:4 / 5;height:auto;"></image-slot></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;">
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="g5" placeholder="Horizontal" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:3 / 2;height:auto;"></image-slot></div>
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="g6" placeholder="Horizontal" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:3 / 2;height:auto;"></image-slot></div>
+          </div>
+        </div>
+
+        <!-- PAGE 2 -->
+        <div style="flex:none;width:100%;scroll-snap-align:start;display:flex;flex-direction:column;gap:16px;">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="p2g1" placeholder="Vertical" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:4 / 5;height:auto;"></image-slot></div>
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="p2g2" placeholder="Vertical" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:4 / 5;height:auto;"></image-slot></div>
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="p2g3" placeholder="Vertical" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:4 / 5;height:auto;"></image-slot></div>
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="p2g4" placeholder="Vertical" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:4 / 5;height:auto;"></image-slot></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;">
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="p2g5" placeholder="Horizontal" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:3 / 2;height:auto;"></image-slot></div>
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="p2g6" placeholder="Horizontal" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:3 / 2;height:auto;"></image-slot></div>
+          </div>
+        </div>
+
+        <!-- PAGE 3 -->
+        <div style="flex:none;width:100%;scroll-snap-align:start;display:flex;flex-direction:column;gap:16px;">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="p3g1" placeholder="Vertical" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:4 / 5;height:auto;"></image-slot></div>
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="p3g2" placeholder="Vertical" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:4 / 5;height:auto;"></image-slot></div>
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="p3g3" placeholder="Vertical" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:4 / 5;height:auto;"></image-slot></div>
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="p3g4" placeholder="Vertical" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:4 / 5;height:auto;"></image-slot></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;">
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="p3g5" placeholder="Horizontal" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:3 / 2;height:auto;"></image-slot></div>
+            <div style="border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;"><image-slot id="p3g6" placeholder="Horizontal" shape="rounded" radius="2" fit="cover" style="display:block;width:100%;aspect-ratio:3 / 2;height:auto;"></image-slot></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PAGE DOTS -->
+      <div style="display:flex;justify-content:center;gap:10px;margin-top:clamp(24px,3.5vh,40px);">
+        <sc-for list="{{ pfDots }}" as="dot" hint-placeholder-count="3">
+          <button type="button" onClick="{{ dot.go }}" aria-label="Página" style="{{ dot.style }}"></button>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- TFP -->
+  <section id="tfp" style="padding:clamp(80px,12vh,150px) clamp(20px,8vw,120px);background:#0c0b0a;">
+    <div style="max-width:1120px;margin:0 auto;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+        <span style="width:32px;height:1px;background:#d8a24a;display:block;"></span>
+        <span style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#d8a24a;">{{ t.tfpLabel }}</span>
+      </div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(36px,6vw,72px);line-height:1.02;margin:0 0 22px;color:#f3eee5;">{{ t.tfpTitle }}</h2>
+      <p style="font-weight:300;font-size:clamp(16px,1.4vw,19px);line-height:1.7;max-width:680px;margin:0 0 clamp(40px,6vh,64px);color:#c2b9ad;">{{ t.tfpBody }}</p>
+
+      <div style="display:flex;gap:clamp(24px,4vw,48px);flex-wrap:wrap;">
+        <div style="flex:1 1 320px;min-width:280px;background:#161310;border:1px solid rgba(236,230,220,0.08);border-radius:4px;padding:clamp(26px,3vw,36px);">
+          <h3 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:26px;margin:0 0 22px;color:#d8a24a;">{{ t.lookTitle }}</h3>
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <sc-for list="{{ t.look }}" as="point" hint-placeholder-count="4">
+              <div style="display:flex;gap:14px;align-items:flex-start;">
+                <span style="flex:none;width:6px;height:6px;border-radius:50%;background:#d8a24a;margin-top:8px;"></span>
+                <span style="font-weight:300;font-size:16px;line-height:1.55;color:#c2b9ad;">{{ point }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="flex:1 1 320px;min-width:280px;background:#161310;border:1px solid rgba(236,230,220,0.08);border-radius:4px;padding:clamp(26px,3vw,36px);">
+          <h3 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:26px;margin:0 0 22px;color:#d8a24a;">{{ t.getTitle }}</h3>
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <sc-for list="{{ t.get }}" as="point" hint-placeholder-count="4">
+              <div style="display:flex;gap:14px;align-items:flex-start;">
+                <span style="flex:none;width:6px;height:6px;border-radius:50%;background:#d8a24a;margin-top:8px;"></span>
+                <span style="font-weight:300;font-size:16px;line-height:1.55;color:#c2b9ad;">{{ point }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process" style="padding:clamp(80px,12vh,140px) clamp(20px,8vw,120px);background:#111;">
+    <div style="max-width:1120px;margin:0 auto;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+        <span style="width:32px;height:1px;background:#d8a24a;display:block;"></span>
+        <span style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#d8a24a;">{{ t.processLabel }}</span>
+      </div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(32px,5vw,58px);line-height:1.04;margin:0 0 clamp(40px,6vh,60px);color:#f3eee5;">{{ t.processTitle }}</h2>
+      <div style="display:flex;gap:clamp(18px,2.5vw,28px);flex-wrap:wrap;">
+        <sc-for list="{{ t.steps }}" as="step" hint-placeholder-count="4">
+          <div style="flex:1 1 220px;min-width:200px;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:46px;font-weight:300;color:rgba(216,162,74,0.55);line-height:1;margin-bottom:16px;">{{ step.n }}</div>
+            <div style="width:100%;height:1px;background:rgba(236,230,220,0.12);margin-bottom:18px;"></div>
+            <h3 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:24px;margin:0 0 12px;color:#ece6dc;">{{ step.title }}</h3>
+            <p style="font-weight:300;font-size:15px;line-height:1.6;margin:0;color:#a59c91;">{{ step.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" style="padding:clamp(90px,14vh,170px) clamp(20px,8vw,120px);background:radial-gradient(110% 90% at 50% 120%, rgba(216,162,74,0.12), transparent 60%), #0c0b0a;text-align:center;">
+    <div style="max-width:680px;margin:0 auto;">
+      <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:22px;">
+        <span style="width:32px;height:1px;background:#d8a24a;display:block;"></span>
+        <span style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#d8a24a;">{{ t.contactLabel }}</span>
+        <span style="width:32px;height:1px;background:#d8a24a;display:block;"></span>
+      </div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(40px,7vw,80px);line-height:1.02;margin:0 0 18px;color:#f3eee5;">{{ t.contactTitle }}</h2>
+      <p style="font-weight:300;font-size:18px;line-height:1.6;margin:0 0 40px;color:#c2b9ad;">{{ t.contactSub }}</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;">
+        <a href="https://wa.me/34674474418" target="_blank" rel="noopener" style="display:inline-block;background:#d8a24a;color:#0c0b0a;padding:15px 34px;border-radius:2px;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:background .25s,transform .25s;" style-hover="background:#e7b65f;transform:translateY(-2px)">WhatsApp</a>
+        <a href="https://instagram.com/ph.kostiantyn.v" target="_blank" rel="noopener" style="display:inline-block;background:transparent;color:#ece6dc;padding:15px 34px;border:1px solid rgba(236,230,220,0.28);border-radius:2px;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:border-color .25s,color .25s;" style-hover="border-color:#d8a24a;color:#d8a24a">Instagram</a>
+        <a href="mailto:photo@vorkos.dev" style="display:inline-block;background:transparent;color:#ece6dc;padding:15px 34px;border:1px solid rgba(236,230,220,0.28);border-radius:2px;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:border-color .25s,color .25s;" style-hover="border-color:#d8a24a;color:#d8a24a">Email</a>
+      </div>
+      <p style="font-size:14px;line-height:1.6;margin:36px 0 0;color:#7d756a;">{{ t.priceNote }} <a href="https://www.malaga-fotografia.com/price" target="_blank" rel="noopener" style="color:#d8a24a;text-decoration:none;border-bottom:1px solid rgba(216,162,74,0.4);">{{ t.priceLink }}</a></p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="border-top:1px solid rgba(236,230,220,0.08);padding:32px clamp(20px,8vw,120px);display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;">
+    <span style="font-family:'Cormorant Garamond',serif;font-size:16px;letter-spacing:3px;text-transform:uppercase;color:#a59c91;">Kostiantyn V.</span>
+    <span style="font-size:12px;letter-spacing:1px;color:#6f675d;">{{ t.footnote }} · Málaga</span>
+    <span style="font-size:12px;letter-spacing:1px;color:#6f675d;">@ph.kostiantyn.v</span>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { lang: 'es', pfPage: 0 };
+
+  _pfPages = 3;
+
+  _pfGo = (n) => {
+    const track = document.getElementById('pf-track');
+    if (track) track.scrollTo({ left: n * track.clientWidth, behavior: 'smooth' });
+    this.setState({ pfPage: n });
+  };
+
+  componentDidMount() {
+    const track = document.getElementById('pf-track');
+    if (!track) return;
+    let paused = false;
+    track.addEventListener('mouseenter', () => { paused = true; });
+    track.addEventListener('mouseleave', () => { paused = false; });
+    // keep dots in sync with manual scrolling
+    track.addEventListener('scroll', () => {
+      const n = Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
+      if (n !== this.state.pfPage) this.setState({ pfPage: n });
+    }, { passive: true });
+    this._pfTimer = setInterval(() => {
+      if (paused) return;
+      const next = (this.state.pfPage + 1) % this._pfPages;
+      this._pfGo(next);
+    }, 4500);
+  }
+
+  componentWillUnmount() {
+    if (this._pfTimer) clearInterval(this._pfTimer);
+  }
+
+  renderVals() {
+    const C = {
+      es: {
+        nav: [
+          { href: '#portfolio', label: 'Portfolio' },
+          { href: '#tfp', label: 'Colaboración' },
+          { href: '#process', label: 'Proceso' },
+          { href: '#contact', label: 'Contacto' },
+        ],
+        heroEyebrow: 'Fotografía de retrato · Málaga',
+        heroTitle: 'Empoderamiento a través de la imagen',
+        heroSub: 'Retrato, boudoir y desnudo artístico. Busco musas para colaborar — un espacio seguro y profesional donde aprender a verte con otros ojos.',
+        heroCta1: 'Colabora conmigo',
+        heroCta2: 'Ver portfolio',
+        introLabel: 'Hola, soy Kostya',
+        introBody: 'No necesitas ser modelo — solo necesitas ser tú. Creo retratos íntimos que capturan tu belleza única en un ambiente relajado, guiándote en cada paso para que las fotos salgan naturales y hermosas.',
+        promise: 'Un espacio 100% confidencial y profesional. Tú decides los límites; yo me encargo del resto.',
+        portfolioLabel: 'Portfolio',
+        portfolioTitle: 'Trabajo reciente',
+        portfolioSub: 'Una selección de sesiones de retrato, boudoir y desnudo artístico.',
+        tfpLabel: 'Colaboraciones TFP',
+        tfpTitle: 'Busco musas',
+        tfpBody: 'TFP (Time for Prints) significa colaborar sin dinero de por medio: yo aporto tiempo, equipo y dirección; tú, tu presencia. Ambos recibimos las imágenes para nuestros portfolios.',
+        lookTitle: 'Lo que busco',
+        look: [
+          'Ganas de probar algo nuevo frente a la cámara',
+          'Interés en retrato, boudoir o desnudo artístico',
+          'Compromiso y puntualidad',
+          'Mayores de 18 años',
+        ],
+        getTitle: 'Lo que recibes',
+        get: [
+          'Galería privada con tus fotos editadas',
+          'Una experiencia segura, sin juicios',
+          'Dirección de poses en todo momento',
+          'Libertad para proponer tus propias ideas',
+        ],
+        processLabel: 'Cómo trabajo',
+        processTitle: 'El proceso, paso a paso',
+        steps: [
+          { n: '01', title: 'Hablamos', body: 'Charlamos sin compromiso para conocernos y entender qué buscas.' },
+          { n: '02', title: 'Elegimos el lugar', body: 'Tu casa, un hotel bonito, estudio o exterior. Donde te sientas cómoda.' },
+          { n: '03', title: 'La sesión', body: 'Traigo todo el equipo y te guío en cada pose. Solo relájate y disfruta.' },
+          { n: '04', title: 'Tu galería', body: 'Recibes tus fotos editadas en una galería privada en 7–10 días.' },
+        ],
+        contactLabel: 'Contacto',
+        contactTitle: '¿Hablamos?',
+        contactSub: 'Sin compromiso, pregunta lo que quieras.',
+        priceNote: '¿Prefieres una sesión privada de pago? Sesiones desde 250€ —',
+        priceLink: 'consulta tarifas',
+        footnote: '100% confidencial y profesional',
+      },
+      en: {
+        nav: [
+          { href: '#portfolio', label: 'Portfolio' },
+          { href: '#tfp', label: 'Collaborate' },
+          { href: '#process', label: 'Process' },
+          { href: '#contact', label: 'Contact' },
+        ],
+        heroEyebrow: 'Portrait photography · Málaga',
+        heroTitle: 'Empowerment through the image',
+        heroSub: "Portrait, boudoir and fine-art nude. I'm looking for muses to collaborate with — a safe, professional space to learn to see yourself differently.",
+        heroCta1: 'Collaborate with me',
+        heroCta2: 'View portfolio',
+        introLabel: "Hi, I'm Kostya",
+        introBody: "You don't need to be a model — you just need to be you. I create intimate portraits that capture your unique beauty in a relaxed setting, guiding you every step so the photos come out natural and beautiful.",
+        promise: 'A 100% confidential and professional space. You set the limits; I take care of the rest.',
+        portfolioLabel: 'Portfolio',
+        portfolioTitle: 'Recent work',
+        portfolioSub: 'A selection of portrait, boudoir and fine-art nude sessions.',
+        tfpLabel: 'TFP collaborations',
+        tfpTitle: 'Looking for muses',
+        tfpBody: 'TFP (Time for Prints) means we collaborate with no money involved: I bring time, gear and direction; you bring your presence. We both receive the images for our portfolios.',
+        lookTitle: 'What I look for',
+        look: [
+          'A wish to try something new in front of the camera',
+          'Interest in portrait, boudoir or fine-art nude',
+          'Commitment and punctuality',
+          '18 years or older',
+        ],
+        getTitle: 'What you get',
+        get: [
+          'A private gallery with your edited photos',
+          'A safe, judgement-free experience',
+          'Posing guidance the whole time',
+          'Freedom to bring your own ideas',
+        ],
+        processLabel: 'How I work',
+        processTitle: 'The process, step by step',
+        steps: [
+          { n: '01', title: 'We talk', body: "A no-pressure chat to get to know each other and what you're after." },
+          { n: '02', title: 'We pick the place', body: 'Your home, a nice hotel, studio or outdoors. Wherever you feel comfortable.' },
+          { n: '03', title: 'The session', body: 'I bring all the gear and guide you through every pose. Just relax and enjoy.' },
+          { n: '04', title: 'Your gallery', body: 'You receive your edited photos in a private gallery within 7–10 days.' },
+        ],
+        contactLabel: 'Contact',
+        contactTitle: 'Shall we talk?',
+        contactSub: 'No commitment — ask me anything.',
+        priceNote: 'Prefer a private paid session? Sessions from €250 —',
+        priceLink: 'see pricing',
+        footnote: '100% confidential and professional',
+      },
+    };
+
+    const lang = this.state.lang;
+
+    const base = 'width:30px;height:4px;border-radius:2px;border:none;padding:0;cursor:pointer;transition:background .3s,width .3s;';
+    const pfDots = [0, 1, 2].map((n) => ({
+      go: () => this._pfGo(n),
+      style: base + (n === this.state.pfPage
+        ? 'width:44px;background:#d8a24a;'
+        : 'background:rgba(236,230,220,0.22);'),
+    }));
+
+    return {
+      t: C[lang],
+      isEs: lang === 'es',
+      isEn: lang === 'en',
+      setEs: () => this.setState({ lang: 'es' }),
+      setEn: () => this.setState({ lang: 'en' }),
+      pfDots,
+    };
+  }
+}
+</script>
+</body>
+</html>
