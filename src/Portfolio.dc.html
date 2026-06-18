@@ -31,7 +31,7 @@
   <nav style="position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:16px clamp(20px,5vw,56px);background:rgba(12,11,10,0.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(236,230,220,0.08);">
     <a href="#top" style="font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:3px;font-weight:500;color:#ece6dc;text-decoration:none;text-transform:uppercase;">Kostiantyn&nbsp;V.</a>
     <div style="display:flex;align-items:center;gap:clamp(16px,2.4vw,34px);flex-wrap:wrap;">
-      <sc-for list="{{ t.nav }}" as="item" hint-placeholder-count="4">
+      <sc-for list="{{ t.nav }}" as="item" hint-placeholder-count="5">
         <a href="{{ item.href }}" style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#a59c91;text-decoration:none;transition:color .25s;" style-hover="color:#d8a24a">{{ item.label }}</a>
       </sc-for>
       <div style="display:flex;gap:6px;margin-left:6px;">
@@ -230,7 +230,7 @@
         <a href="https://instagram.com/ph.kostiantyn.v" target="_blank" rel="noopener" style="display:inline-block;background:transparent;color:#ece6dc;padding:15px 34px;border:1px solid rgba(236,230,220,0.28);border-radius:2px;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:border-color .25s,color .25s;" style-hover="border-color:#d8a24a;color:#d8a24a">Instagram</a>
         <a href="mailto:photo@vorkos.dev" style="display:inline-block;background:transparent;color:#ece6dc;padding:15px 34px;border:1px solid rgba(236,230,220,0.28);border-radius:2px;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:border-color .25s,color .25s;" style-hover="border-color:#d8a24a;color:#d8a24a">Email</a>
       </div>
-      <p style="font-size:14px;line-height:1.6;margin:36px 0 0;color:#7d756a;">{{ t.priceNote }} <a href="https://www.malaga-fotografia.com/price" target="_blank" rel="noopener" style="color:#d8a24a;text-decoration:none;border-bottom:1px solid rgba(216,162,74,0.4);">{{ t.priceLink }}</a></p>
+      <p style="font-size:14px;line-height:1.6;margin:36px 0 0;color:#7d756a;">{{ t.priceNote }} <a href="prices.html" style="color:#d8a24a;text-decoration:none;border-bottom:1px solid rgba(216,162,74,0.4);">{{ t.priceLink }}</a></p>
     </div>
   </section>
 
@@ -284,6 +284,7 @@ class Component extends DCLogic {
           { href: '#portfolio', label: 'Portfolio' },
           { href: '#tfp', label: 'Colaboración' },
           { href: '#process', label: 'Proceso' },
+          { href: 'prices.html', label: 'Precios' },
           { href: '#contact', label: 'Contacto' },
         ],
         heroEyebrow: 'Fotografía de retrato · Málaga',
@@ -334,6 +335,7 @@ class Component extends DCLogic {
           { href: '#portfolio', label: 'Portfolio' },
           { href: '#tfp', label: 'Collaborate' },
           { href: '#process', label: 'Process' },
+          { href: 'prices.html', label: 'Pricing' },
           { href: '#contact', label: 'Contact' },
         ],
         heroEyebrow: 'Portrait photography · Málaga',

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#0c0b0a"/><text x="50" y="63" font-family="Georgia, serif" font-size="30" letter-spacing="2" fill="#d8a24a" text-anchor="middle">€</text></svg>
+</template>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+  <style>
+    html{scroll-behavior:smooth}
+    body{margin:0;background:#0c0b0a}
+    ::selection{background:rgba(216,162,74,.3);color:#fff}
+    @keyframes mfUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  </style>
+</helmet>
+
+<div style="font-family:Archivo,sans-serif;background:#0c0b0a;color:#ece6dc;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;">
+
+  <!-- NAV -->
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:16px clamp(20px,5vw,56px);background:rgba(12,11,10,0.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(236,230,220,0.08);">
+    <a href="index.html#top" style="font-family:'Cormorant Garamond',serif;font-size:20px;letter-spacing:3px;font-weight:500;color:#ece6dc;text-decoration:none;text-transform:uppercase;">Kostiantyn&nbsp;V.</a>
+    <div style="display:flex;align-items:center;gap:clamp(16px,2.4vw,34px);flex-wrap:wrap;">
+      <sc-for list="{{ t.nav }}" as="item" hint-placeholder-count="5">
+        <a href="{{ item.href }}" style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#a59c91;text-decoration:none;transition:color .25s;" style-hover="color:#d8a24a">{{ item.label }}</a>
+      </sc-for>
+      <div style="display:flex;gap:6px;margin-left:6px;">
+        <sc-if value="{{ isEs }}" hint-placeholder-val="{{ true }}">
+          <button type="button" onClick="{{ setEs }}" style="font-family:Archivo,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;padding:7px 13px;border-radius:2px;cursor:pointer;border:1px solid #d8a24a;background:#d8a24a;color:#0c0b0a;">ES</button>
+        </sc-if>
+        <sc-if value="{{ isEn }}">
+          <button type="button" onClick="{{ setEs }}" style="font-family:Archivo,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;padding:7px 13px;border-radius:2px;cursor:pointer;border:1px solid rgba(236,230,220,0.18);background:transparent;color:#968d82;">ES</button>
+        </sc-if>
+        <sc-if value="{{ isEs }}">
+          <button type="button" onClick="{{ setEn }}" style="font-family:Archivo,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;padding:7px 13px;border-radius:2px;cursor:pointer;border:1px solid rgba(236,230,220,0.18);background:transparent;color:#968d82;">EN</button>
+        </sc-if>
+        <sc-if value="{{ isEn }}">
+          <button type="button" onClick="{{ setEn }}" style="font-family:Archivo,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;padding:7px 13px;border-radius:2px;cursor:pointer;border:1px solid #d8a24a;background:#d8a24a;color:#0c0b0a;">EN</button>
+        </sc-if>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <section style="position:relative;padding:clamp(130px,18vh,190px) clamp(20px,8vw,120px) clamp(50px,7vh,80px);overflow:hidden;background:radial-gradient(120% 90% at 50% -10%, rgba(216,162,74,0.12) 0%, rgba(216,162,74,0.03) 38%, transparent 64%), #0c0b0a;">
+    <div style="max-width:1180px;margin:0 auto;display:flex;gap:clamp(40px,6vw,80px);flex-wrap:wrap;align-items:center;">
+      <div style="flex:1 1 460px;min-width:300px;animation:mfUp .7s ease both;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px;">
+          <span style="width:42px;height:1px;background:#d8a24a;display:block;"></span>
+          <span style="font-size:12px;letter-spacing:4px;text-transform:uppercase;color:#d8a24a;">{{ t.eyebrow }}</span>
+        </div>
+        <h1 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(40px,6.5vw,82px);line-height:1.03;margin:0 0 24px;letter-spacing:-0.5px;color:#f3eee5;text-wrap:balance;">{{ t.title }}</h1>
+        <p style="font-weight:300;font-size:clamp(16px,1.5vw,20px);line-height:1.65;max-width:540px;margin:0;color:#c2b9ad;">{{ t.sub }}</p>
+      </div>
+      <div style="flex:0 1 340px;min-width:240px;border:1px solid rgba(236,230,220,0.16);background:#161310;padding:6px;border-radius:4px;animation:mfUp .7s .12s ease both;">
+        <img src="/gallery/Z52_0501.jpg" alt="" style="display:block;width:100%;aspect-ratio:4 / 5;object-fit:cover;border-radius:2px;">
+      </div>
+    </div>
+  </section>
+
+  <!-- TIERS -->
+  <section style="padding:clamp(20px,3vh,40px) clamp(20px,5vw,72px) clamp(70px,9vh,110px);background:#0c0b0a;">
+    <div style="max-width:1240px;margin:0 auto;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(18px,2.4vw,28px);align-items:stretch;">
+        <sc-for list="{{ t.tiers }}" as="tier" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;background:{{ tier.bg }};border:{{ tier.border }};border-radius:6px;padding:clamp(28px,3vw,40px);position:relative;">
+            <sc-if value="{{ tier.popular }}" hint-placeholder-val="{{ false }}">
+              <span style="position:absolute;top:-11px;left:clamp(28px,3vw,40px);background:#d8a24a;color:#0c0b0a;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:5px 12px;border-radius:2px;">{{ t.popular }}</span>
+            </sc-if>
+            <h3 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:28px;margin:0 0 6px;color:#ece6dc;">{{ tier.name }}</h3>
+            <p style="font-size:13px;line-height:1.5;margin:0 0 22px;color:#a59c91;min-height:40px;">{{ tier.desc }}</p>
+            <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:24px;">
+              <span style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(44px,5vw,58px);line-height:1;color:#f3eee5;">{{ tier.price }}</span>
+              <span style="font-size:13px;letter-spacing:1px;color:#7d756a;">{{ tier.unit }}</span>
+            </div>
+            <div style="width:100%;height:1px;background:rgba(236,230,220,0.1);margin-bottom:22px;"></div>
+            <div style="display:flex;flex-direction:column;gap:13px;margin-bottom:30px;flex:1;">
+              <sc-for list="{{ tier.features }}" as="f" hint-placeholder-count="4">
+                <div style="display:flex;gap:12px;align-items:flex-start;">
+                  <span style="flex:none;width:6px;height:6px;border-radius:50%;background:#d8a24a;margin-top:7px;"></span>
+                  <span style="font-weight:300;font-size:15px;line-height:1.5;color:#c2b9ad;">{{ f }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <a href="https://wa.me/34674474418" target="_blank" rel="noopener" style="display:block;text-align:center;background:{{ tier.btnBg }};color:{{ tier.btnColor }};border:{{ tier.btnBorder }};padding:14px 24px;border-radius:2px;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:transform .25s;" style-hover="transform:translateY(-2px)">{{ t.book }}</a>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- INCLUDED + ADD-ONS -->
+  <section style="padding:clamp(70px,10vh,120px) clamp(20px,8vw,120px);background:#111;">
+    <div style="max-width:1120px;margin:0 auto;display:flex;gap:clamp(32px,5vw,64px);flex-wrap:wrap;">
+      <div style="flex:1 1 360px;min-width:280px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+          <span style="width:32px;height:1px;background:#d8a24a;display:block;"></span>
+          <span style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#d8a24a;">{{ t.includedLabel }}</span>
+        </div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(28px,4vw,44px);line-height:1.08;margin:0 0 26px;color:#f3eee5;">{{ t.includedTitle }}</h2>
+        <div style="display:flex;flex-direction:column;gap:15px;">
+          <sc-for list="{{ t.included }}" as="point" hint-placeholder-count="4">
+            <div style="display:flex;gap:14px;align-items:flex-start;">
+              <span style="flex:none;width:6px;height:6px;border-radius:50%;background:#d8a24a;margin-top:8px;"></span>
+              <span style="font-weight:300;font-size:16px;line-height:1.55;color:#c2b9ad;">{{ point }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="flex:1 1 360px;min-width:280px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+          <span style="width:32px;height:1px;background:#d8a24a;display:block;"></span>
+          <span style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#d8a24a;">{{ t.addonsLabel }}</span>
+        </div>
+        <h2 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(28px,4vw,44px);line-height:1.08;margin:0 0 26px;color:#f3eee5;">{{ t.addonsTitle }}</h2>
+        <div style="display:flex;flex-direction:column;">
+          <sc-for list="{{ t.addons }}" as="a" hint-placeholder-count="4">
+            <div style="display:flex;justify-content:space-between;gap:18px;align-items:baseline;padding:15px 0;border-bottom:1px solid rgba(236,230,220,0.08);">
+              <span style="font-weight:300;font-size:16px;line-height:1.4;color:#c2b9ad;">{{ a.name }}</span>
+              <span style="flex:none;font-family:'Cormorant Garamond',serif;font-size:21px;color:#d8a24a;">{{ a.price }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TFP NOTE -->
+  <section style="padding:clamp(60px,9vh,100px) clamp(20px,8vw,120px);background:#0c0b0a;">
+    <div style="max-width:900px;margin:0 auto;border-left:2px solid #d8a24a;padding:8px 0 8px 26px;">
+      <p style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(22px,2.6vw,32px);line-height:1.4;margin:0 0 14px;color:#ece6dc;text-wrap:pretty;">{{ t.tfpHead }}</p>
+      <p style="font-weight:300;font-size:16px;line-height:1.65;margin:0;color:#a59c91;">{{ t.tfpBody }} <a href="index.html#tfp" style="color:#d8a24a;text-decoration:none;border-bottom:1px solid rgba(216,162,74,0.4);">{{ t.tfpLink }}</a></p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section style="padding:clamp(80px,13vh,150px) clamp(20px,8vw,120px);background:radial-gradient(110% 90% at 50% 120%, rgba(216,162,74,0.12), transparent 60%), #0c0b0a;text-align:center;">
+    <div style="max-width:680px;margin:0 auto;">
+      <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:22px;">
+        <span style="width:32px;height:1px;background:#d8a24a;display:block;"></span>
+        <span style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#d8a24a;">{{ t.ctaLabel }}</span>
+        <span style="width:32px;height:1px;background:#d8a24a;display:block;"></span>
+      </div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(36px,6vw,68px);line-height:1.04;margin:0 0 18px;color:#f3eee5;">{{ t.ctaTitle }}</h2>
+      <p style="font-weight:300;font-size:18px;line-height:1.6;margin:0 0 38px;color:#c2b9ad;">{{ t.ctaSub }}</p>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;">
+        <a href="https://wa.me/34674474418" target="_blank" rel="noopener" style="display:inline-block;background:#d8a24a;color:#0c0b0a;padding:15px 34px;border-radius:2px;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:background .25s,transform .25s;" style-hover="background:#e7b65f;transform:translateY(-2px)">WhatsApp</a>
+        <a href="index.html#portfolio" style="display:inline-block;background:transparent;color:#ece6dc;padding:15px 34px;border:1px solid rgba(236,230,220,0.28);border-radius:2px;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:border-color .25s,color .25s;" style-hover="border-color:#d8a24a;color:#d8a24a">{{ t.back }}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="border-top:1px solid rgba(236,230,220,0.08);padding:32px clamp(20px,8vw,120px);display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;">
+    <span style="font-family:'Cormorant Garamond',serif;font-size:16px;letter-spacing:3px;text-transform:uppercase;color:#a59c91;">Kostiantyn V.</span>
+    <span style="font-size:12px;letter-spacing:1px;color:#6f675d;">{{ t.footnote }} · Málaga</span>
+    <span style="font-size:12px;letter-spacing:1px;color:#6f675d;">@ph.kostiantyn.v</span>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { lang: (typeof localStorage !== 'undefined' && localStorage.getItem('mf_lang')) || 'en' };
+
+  renderVals() {
+    const tierStyle = (popular) => popular
+      ? { bg: 'linear-gradient(180deg,#1b1611,#161310)', border: '1px solid rgba(216,162,74,0.55)', btnBg: '#d8a24a', btnColor: '#0c0b0a', btnBorder: 'none' }
+      : { bg: '#161310', border: '1px solid rgba(236,230,220,0.1)', btnBg: 'transparent', btnColor: '#ece6dc', btnBorder: '1px solid rgba(236,230,220,0.28)' };
+
+    const C = {
+      es: {
+        nav: [
+          { href: 'index.html#portfolio', label: 'Portfolio' },
+          { href: 'index.html#tfp', label: 'Colaboración' },
+          { href: 'index.html#process', label: 'Proceso' },
+          { href: 'prices.html', label: 'Precios' },
+          { href: 'index.html#contact', label: 'Contacto' },
+        ],
+        eyebrow: 'Tarifas · Málaga',
+        title: 'Sesiones y tarifas',
+        sub: 'Precios claros, sin sorpresas. Cada sesión incluye dirección de poses, un espacio seguro y tu galería privada editada.',
+        popular: 'Más elegida',
+        book: 'Reservar',
+        tiers: [
+          { ...tierStyle(false), name: 'Mini sesión', desc: 'Ideal para una primera vez, relajada y sin prisa.', price: '250€', unit: '/ sesión', features: ['Hasta 45 min', '1 look / estilo', '8 fotos editadas', 'Galería privada online'] },
+          { ...tierStyle(true), popular: true, name: 'Sesión Signature', desc: 'La experiencia completa de retrato o boudoir.', price: '420€', unit: '/ sesión', features: ['Hasta 2 horas', '2–3 looks / estilos', '20 fotos editadas', 'Ayuda con poses y estilismo', 'Galería privada online'] },
+          { ...tierStyle(false), name: 'Editorial Deluxe', desc: 'Producción de medio día con todo cuidado al detalle.', price: '650€', unit: '/ sesión', features: ['Medio día (hasta 4 h)', 'Looks ilimitados', '35 fotos editadas', 'Localización o estudio incluido', 'Maquillaje y peluquería'] },
+        ],
+        includedLabel: 'Siempre incluido',
+        includedTitle: 'En cada sesión',
+        included: [
+          'Dirección de poses en todo momento',
+          'Un espacio 100% confidencial y sin juicios',
+          'Galería privada con tus fotos editadas en 7–10 días',
+          'Tú decides los límites; yo me encargo del resto',
+        ],
+        addonsLabel: 'Extras',
+        addonsTitle: 'Complementos',
+        addons: [
+          { name: 'Foto editada adicional', price: '15€' },
+          { name: 'Maquillaje y peluquería (MUA)', price: '90€' },
+          { name: 'Alquiler de estudio o localización', price: '120€' },
+          { name: 'Entrega exprés (48 h)', price: '70€' },
+          { name: 'Álbum impreso premium', price: 'desde 110€' },
+        ],
+        tfpHead: '¿Prefieres colaborar sin coste?',
+        tfpBody: 'Si buscamos lo mismo, podemos trabajar en modalidad TFP — sin dinero de por medio, ambos recibimos las imágenes.',
+        tfpLink: 'Ver colaboraciones TFP',
+        ctaLabel: 'Reserva',
+        ctaTitle: '¿Lista para tu sesión?',
+        ctaSub: 'Escríbeme y diseñamos juntos la sesión perfecta para ti.',
+        back: 'Ver portfolio',
+        footnote: '100% confidencial y profesional',
+      },
+      en: {
+        nav: [
+          { href: 'index.html#portfolio', label: 'Portfolio' },
+          { href: 'index.html#tfp', label: 'Collaborate' },
+          { href: 'index.html#process', label: 'Process' },
+          { href: 'prices.html', label: 'Pricing' },
+          { href: 'index.html#contact', label: 'Contact' },
+        ],
+        eyebrow: 'Pricing · Málaga',
+        title: 'Sessions & pricing',
+        sub: 'Clear pricing, no surprises. Every session includes posing guidance, a safe space and your private edited gallery.',
+        popular: 'Most chosen',
+        book: 'Book now',
+        tiers: [
+          { ...tierStyle(false), name: 'Mini session', desc: 'Perfect for a relaxed, no-rush first time.', price: '€250', unit: '/ session', features: ['Up to 45 min', '1 look / style', '8 edited photos', 'Private online gallery'] },
+          { ...tierStyle(true), popular: true, name: 'Signature session', desc: 'The full portrait or boudoir experience.', price: '€420', unit: '/ session', features: ['Up to 2 hours', '2–3 looks / styles', '20 edited photos', 'Posing & styling help', 'Private online gallery'] },
+          { ...tierStyle(false), name: 'Editorial Deluxe', desc: 'A half-day production with every detail handled.', price: '€650', unit: '/ session', features: ['Half day (up to 4h)', 'Unlimited looks', '35 edited photos', 'Location or studio included', 'Makeup & hair styling'] },
+        ],
+        includedLabel: 'Always included',
+        includedTitle: 'In every session',
+        included: [
+          'Posing guidance the whole time',
+          'A 100% confidential, judgement-free space',
+          'Private gallery with your edited photos in 7–10 days',
+          'You set the limits; I take care of the rest',
+        ],
+        addonsLabel: 'Extras',
+        addonsTitle: 'Add-ons',
+        addons: [
+          { name: 'Extra edited photo', price: '€15' },
+          { name: 'Makeup & hair (MUA)', price: '€90' },
+          { name: 'Studio or location rental', price: '€120' },
+          { name: 'Express delivery (48h)', price: '€70' },
+          { name: 'Premium printed album', price: 'from €110' },
+        ],
+        tfpHead: 'Prefer to collaborate at no cost?',
+        tfpBody: "If we're after the same thing, we can work TFP — no money involved, we both receive the images.",
+        tfpLink: 'See TFP collaborations',
+        ctaLabel: 'Booking',
+        ctaTitle: 'Ready for your session?',
+        ctaSub: "Message me and we'll design the perfect session for you together.",
+        back: 'View portfolio',
+        footnote: '100% confidential and professional',
+      },
+    };
+
+    const lang = this.state.lang;
+    return {
+      t: C[lang],
+      isEs: lang === 'es',
+      isEn: lang === 'en',
+      setEs: () => { try { localStorage.setItem('mf_lang', 'es'); } catch (e) {} this.setState({ lang: 'es' }); },
+      setEn: () => { try { localStorage.setItem('mf_lang', 'en'); } catch (e) {} this.setState({ lang: 'en' }); },
+    };
+  }
+}
+</script>
+</body>
+</html>

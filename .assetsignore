@@ -4,3 +4,7 @@ wrangler.jsonc
 .assetsignore
 src
 .agent
+photo-grid.jpeg
+fix_slots.py
+check_slots.py
+README.md
