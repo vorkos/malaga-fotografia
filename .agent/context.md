@@ -125,8 +125,8 @@ Also: **about-portrait** in the About section — currently `Z52_0569.jpg` (styl
 
 On every page load, a script in index.html shuffles V and H pools independently and reassigns all 18 gallery img src attributes. It finds imgs inside `#pf-track` by checking inline style for `4 / 5` (vertical) or `3 / 2` (horizontal).
 
-**V pool (29 photos — 3★ heroes + unrated):**
-Z52_0501, Z52_0537-small, Z52_1336, Z52_1162-small, Z52_1652-small, Z52_0924, Z52_1917-small, Z52_1820-small, Z52_2867-small, Z52_6186_DxO-small, Z52_9933-small, Z52_9385-small, Z52_9094-small, Z52_7655-small, Z52_2868-small, Z52_9756-small, Z52_9652-small, Z52_9480-small, Z52_9287-small, Z52_7827-small, Z52_7622-small, Z52_7547-small_2, Z52_0012-small, Z52_0515, Z52_0561, Z52_0631, Z52_9457-small, Z52_9087-small, Z52_8190_1-small
+**V pool (28 photos — 3★ heroes + unrated):**
+Z52_0501, Z52_0537-small, Z52_1336, Z52_1162-small, Z52_1652-small, Z52_0924, Z52_1917-small, Z52_1820-small, Z52_2867-small, Z52_6186_DxO-small, Z52_9385-small, Z52_9094-small, Z52_7655-small, Z52_2868-small, Z52_9756-small, Z52_9652-small, Z52_9480-small, Z52_9287-small, Z52_7827-small, Z52_7622-small, Z52_7547-small_2, Z52_0012-small, Z52_0515, Z52_0561, Z52_0631, Z52_9457-small, Z52_9087-small, Z52_8190_1-small
 
 **H pool (11 photos — 3★ heroes + 2★ greats):**
 Z52_0461, Z52_0431, Z52_0383, Z52_9221-small, Z52_2638-small, Z52_9471-small_1, Z52_0441, Z52_0446, Z52_2637-small, Z52_2615-small
