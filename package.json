@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:blog": "node blog/build.mjs"
+    "build:blog": "node blog/build.mjs",
+    "pick": "node blog/tools/pick.mjs"
   },
   "devDependencies": {
     "gray-matter": "^4.0.3",

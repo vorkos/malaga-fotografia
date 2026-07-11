@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Journal photo picker</title>
+<style>
+  :root{--bg:#0c0b0a;--surface:#141210;--text:#ece6dc;--dim:#a49b8d;--gold:#d8a24a}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Archivo,sans-serif;font-size:14px}
+  header{position:sticky;top:0;z-index:5;background:rgba(12,11,10,.94);backdrop-filter:blur(8px);border-bottom:1px solid rgba(216,162,74,.25);padding:12px 18px}
+  h1{font-size:16px;margin:0 0 8px;color:var(--gold);font-weight:600}
+  .fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}
+  label{display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+  input,textarea,select{background:var(--surface);border:1px solid rgba(216,162,74,.25);color:var(--text);border-radius:5px;padding:7px 8px;font:inherit;font-size:13px}
+  textarea{min-height:70px;resize:vertical;font-size:13px;text-transform:none}
+  .bar{display:flex;align-items:center;gap:14px;margin-top:10px;flex-wrap:wrap}
+  button{background:var(--gold);color:#1a1509;border:none;border-radius:5px;padding:9px 16px;font-weight:600;cursor:pointer;font-size:13px}
+  button.ghost{background:transparent;color:var(--dim);border:1px solid rgba(216,162,74,.3)}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .count{color:var(--dim)}
+  main{padding:16px 18px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+  figure{margin:0;position:relative;cursor:pointer;border:2px solid transparent;border-radius:4px;overflow:hidden}
+  figure.sel{border-color:var(--gold)}
+  figure img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:var(--surface)}
+  figcaption{font-size:10px;color:var(--dim);padding:3px 4px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .badge{position:absolute;top:5px;left:5px;background:var(--gold);color:#1a1509;font-weight:700;font-size:12px;min-width:22px;height:22px;border-radius:50%;display:grid;place-items:center}
+  .cover{position:absolute;top:5px;right:5px;background:rgba(12,11,10,.7);border:1px solid var(--gold);color:var(--gold);border-radius:4px;font-size:10px;padding:2px 5px}
+  .cover.on{background:var(--gold);color:#1a1509}
+  #result{margin-top:10px;padding:10px;border-radius:6px;background:var(--surface);border:1px solid rgba(216,162,74,.3);font-size:13px;white-space:pre-wrap;display:none}
+  code{color:var(--gold)}
+</style></head>
+<body>
+<header>
+  <h1>Journal photo picker <span class="count" id="folder"></span></h1>
+  <div class="fields">
+    <label>Model name<input id="f-model" placeholder="Barbara Cia"></label>
+    <label>Model IG/link<input id="f-link" placeholder="https://instagram.com/…"></label>
+    <label>Title<input id="f-title" placeholder="Barbara — a morning in Málaga"></label>
+    <label>Date<input id="f-date" type="date"></label>
+    <label>Location<input id="f-location" value="Málaga"></label>
+    <label>Language<select id="f-lang"><option value="en">English</option><option value="es">Español</option></select></label>
+    <label style="grid-column:1/-1">Summary (one line, used for search/social)<input id="f-summary"></label>
+    <label style="grid-column:1/-1">Story<textarea id="f-story"></textarea></label>
+    <label>Quote (model's words)<input id="f-quote"></label>
+    <label>Quote by<input id="f-quoteby"></label>
+  </div>
+  <div class="bar">
+    <button id="publish">Publish (upload + build)</button>
+    <button class="ghost" id="clear">Clear selection</button>
+    <span class="count"><b id="nsel">0</b> selected · click order = carousel order · ★ = cover</span>
+  </div>
+  <div id="result"></div>
+</header>
+<main><div class="grid" id="grid">Loading…</div></main>
+<script>
+let images=[], selected=[], cover=null;
+const $=(id)=>document.getElementById(id);
+
+fetch('/api/config').then(r=>r.json()).then(cfg=>{
+  images=cfg.images; $('folder').textContent='· '+cfg.folder+' ('+images.length+')';
+  if(cfg.model) $('f-model').value=cfg.model;
+  $('f-date').value=new Date().toISOString().slice(0,10);
+  render();
+});
+
+function render(){
+  $('grid').innerHTML=images.map(f=>{
+    const i=selected.indexOf(f);
+    return `<figure class="${i>=0?'sel':''}" data-f="${f}">
+      <img loading="lazy" src="/thumb?f=${encodeURIComponent(f)}">
+      ${i>=0?`<span class="badge">${i+1}</span>`:''}
+      <span class="cover ${cover===f?'on':''}" data-cover="${f}">★</span>
+      <figcaption>${f}</figcaption></figure>`;
+  }).join('');
+  $('nsel').textContent=selected.length;
+}
+$('grid').addEventListener('click',e=>{
+  const cov=e.target.closest('[data-cover]');
+  if(cov){ e.stopPropagation(); const f=cov.dataset.cover; cover=(cover===f?null:f); if(cover&&!selected.includes(f))selected.push(f); return render(); }
+  const fig=e.target.closest('[data-f]'); if(!fig)return;
+  const f=fig.dataset.f, i=selected.indexOf(f);
+  if(i>=0){ selected.splice(i,1); if(cover===f)cover=null; } else selected.push(f);
+  render();
+});
+$('clear').onclick=()=>{selected=[];cover=null;render();};
+$('publish').onclick=async()=>{
+  if(!selected.length)return alert('Select at least one photo.');
+  if(!$('f-model').value.trim())return alert('Enter the model name.');
+  $('publish').disabled=true; $('result').style.display='block'; $('result').textContent='Uploading + building…';
+  const payload={model:$('f-model').value,model_link:$('f-link').value,title:$('f-title').value,
+    date:$('f-date').value,location:$('f-location').value,lang:$('f-lang').value,summary:$('f-summary').value,
+    story:$('f-story').value,quote:$('f-quote').value,quote_by:$('f-quoteby').value,order:selected,cover:cover||selected[0]};
+  try{
+    const r=await fetch('/api/publish',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
+    const d=await r.json();
+    if(!r.ok){$('result').textContent='✗ '+(d.error||'failed');}
+    else $('result').innerHTML=`✓ Uploaded ${d.uploaded} photos · wrote ${d.mdPath}\nPreview: <code>${d.postUrl}</code>\nTo go live: <code>${d.previewHint}</code>`;
+  }catch(err){$('result').textContent='✗ '+err.message;}
+  $('publish').disabled=false;
+};
+</script>
+</body></html>

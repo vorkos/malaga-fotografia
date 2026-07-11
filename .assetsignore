@@ -16,3 +16,4 @@ package.json
 package-lock.json
 blog/build.mjs
 blog/content
+blog/tools
