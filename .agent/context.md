@@ -1,7 +1,7 @@
 # malaga-fotografia — Agent Context
 
 > Maintained by Claude. Keep accurate; remove stale info as the project evolves.
-> Last updated: 2026-06-18
+> Last updated: 2026-07-11
 
 ---
 
@@ -172,6 +172,52 @@ export default {
 
 - `/` → index.html — main portfolio (bilingual ES/EN, default: ES)
 - `/prices.html` → pricing page — sessions from €250. Contains 1 R2 photo: Z52_0501.jpg
+- `/blog/` → the **Journal** index; `/blog/<slug>/` → per-shoot posts. See "Journal / Blog" below.
+
+---
+
+## Journal / Blog (added 2026-07-11)
+
+Per-shoot photo essays ("photos + short story about the model & shoot") to build
+trust and attract TFP models. Lives at **`malaga-fotografia.com/blog`**.
+
+- **Static, pre-rendered.** `blog/build.mjs` renders `blog/content/*.md`
+  (Markdown + YAML front-matter) → `blog/<slug>/index.html` + `blog/index.html`.
+  Deps: `markdown-it`, `gray-matter` (in package.json). Run `npm run build:blog`.
+  Generated HTML is **committed** — no CI build step; Cloudflare just serves it.
+- **Why static, not the dc-runtime bundle:** the main index.html is
+  client-rendered (ships unresolved `{{ }}`; scrapers see no real content). Blog
+  pages are real HTML with proper `<title>` / description / Open Graph per post,
+  so shared links unfurl with a photo + headline and Google can index them.
+  The blog is the site's SEO/discovery surface.
+- **Post shape:** hero + story + swipeable photo carousel + model pull-quote +
+  credits (model name linked to their IG, with consent) + "Apply for a TFP
+  shoot" CTA. Brand-styled (dark/gold, Cormorant Garamond + Archivo).
+- **Photos: organised on R2 by model name** → key `gallery/<model>/<file>`,
+  served by the existing `_worker.js` /gallery/ route (no worker change). The
+  108 portfolio photos stay flat at `gallery/Z52_*.jpg` (wired to the homepage
+  rotation — do NOT move them).
+- **Authoring tool (local):** `npm run pick -- "<shoot-folder>" [--model <name>]`
+  → `blog/tools/pick.mjs` serves a local picker page: click/order photos, fill
+  the story, Publish → uploads picks to `gallery/<model>/`, writes the post
+  `.md`, runs the build. It never pushes — review the local preview, then
+  `git push origin main` to deploy. (`blog/tools`, `blog/content`, `blog/build.mjs`
+  are in `.assetsignore` so they're not served.)
+- **Live posts:** `barbara` (13-06-26 session, 8 single-person frames,
+  Barbara Cia @cia_model_official).
+- **Pending:** a 2nd Barbara post from the 25-06-26 shoot (folder has a 2nd
+  red-haired model + two-person frames mixed in — needs Kostya to say which
+  frames are Barbara before publishing).
+- **Homepage tie-ins (2026-07-11):** added a `Journal`/`Diario` nav item
+  (`/blog/`) to the ES+EN `t.nav` arrays, and real `<title>` + description +
+  Open Graph tags to the outer `<head>` (og:image = SFW `Z52_0461.jpg`) so the
+  homepage itself unfurls properly. The *inner* JS-rendered head still has an
+  empty title (Google renders empty) — a deeper fix would need the dc-runtime
+  source; not done.
+
+**Barbara's source exports:** `C:\Users\vorkos\Pictures\exported\IG\26_06\`
+(`13-06-26` = 15 imgs, ranges Z52_0300–0780; `25-06-26` = 26 imgs, Z52_3641–5690,
+mixed models).
 
 ---
 
@@ -199,3 +245,4 @@ export default {
 | 2026-06-18 | Replaced all 19 image-slot placeholders with real R2 img tags via Python byte scripts |
 | 2026-06-18 | Rated all 108 R2 photos (2-pass system); implemented random gallery rotation on load |
 | 2026-06-18 | prices.html URL fixed: old link was `/price`, now `/prices.html` |
+| 2026-07-11 | Added a static Journal/blog at `/blog` (Markdown→pre-rendered HTML, committed). Photos organised on R2 by model name (`gallery/<model>/`). Homepage got OG/SEO meta + a Journal nav link. First post: Barbara. Local authoring tool `npm run pick`. |
