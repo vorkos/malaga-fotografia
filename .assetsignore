@@ -11,3 +11,8 @@ update_gallery.py
 rate.html
 orientations.txt
 README.md
+node_modules
+package.json
+package-lock.json
+blog/build.mjs
+blog/content

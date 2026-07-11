@@ -1,0 +1,12 @@
+{
+  "name": "malaga-fotografia",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:blog": "node blog/build.mjs"
+  },
+  "devDependencies": {
+    "gray-matter": "^4.0.3",
+    "markdown-it": "^14.1.0"
+  }
+}

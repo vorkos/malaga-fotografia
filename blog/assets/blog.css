@@ -1,0 +1,183 @@
+/* Málaga Fotografía — Journal styles.
+   Mobile-first. Brand tokens mirror the main site: near-black bg, warm
+   off-white text, gold accent; Cormorant Garamond headings + Archivo body. */
+
+:root {
+  --bg: #0c0b0a;
+  --surface: #141210;
+  --text: #ece6dc;
+  --text-dim: #a49b8d;
+  --gold: #d8a24a;
+  --gold-hi: #e7bd73;
+  --border: rgba(216, 162, 74, 0.22);
+  --maxw: 760px;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Archivo', system-ui, -apple-system, sans-serif;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--gold-hi); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+img { max-width: 100%; display: block; }
+
+/* --- header / footer --- */
+.site-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem clamp(1rem, 5vw, 2rem);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: rgba(12, 11, 10, 0.86);
+  backdrop-filter: blur(8px);
+  z-index: 20;
+}
+.site-head__brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+.site-head__nav { display: flex; gap: 1.1rem; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; }
+.site-head__nav a { color: var(--text-dim); }
+.site-head__nav a[aria-current='page'] { color: var(--gold-hi); }
+
+.site-foot {
+  margin-top: 4rem;
+  padding: 2rem clamp(1rem, 5vw, 2rem);
+  border-top: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* --- journal index --- */
+.journal { max-width: 1100px; margin: 0 auto; padding: clamp(2rem, 6vw, 4rem) clamp(1rem, 5vw, 2rem); }
+.journal__head { text-align: center; margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+.journal__head h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: clamp(2.6rem, 8vw, 4.2rem);
+  line-height: 1.02;
+  margin: 0 0 0.6rem;
+}
+.journal__head p { color: var(--text-dim); max-width: 44ch; margin: 0 auto; }
+.journal__empty { text-align: center; color: var(--text-dim); }
+
+.journal__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+}
+@media (min-width: 640px) { .journal__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .journal__grid { grid-template-columns: repeat(3, 1fr); } }
+
+.card { display: block; color: inherit; }
+.card:hover { text-decoration: none; }
+.card__img { aspect-ratio: 4 / 5; overflow: hidden; border-radius: 3px; background: var(--surface); }
+.card__img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.card:hover .card__img img { transform: scale(1.03); }
+.card__meta { padding: 0.9rem 0.1rem 0; }
+.card__eyebrow { color: var(--gold); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; margin: 0 0 0.35rem; }
+.card__title { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 1.7rem; line-height: 1.1; margin: 0 0 0.4rem; }
+.card__dek { color: var(--text-dim); font-size: 0.92rem; margin: 0; }
+
+/* --- single post --- */
+.post { max-width: var(--maxw); margin: 0 auto; padding: clamp(2rem, 7vw, 4rem) clamp(1rem, 5vw, 1.6rem); }
+.post__eyebrow { color: var(--gold); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.14em; margin: 0 0 0.6rem; }
+.post__title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: clamp(2.4rem, 9vw, 4rem);
+  line-height: 1.03;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.8rem;
+  text-wrap: balance;
+}
+.post__dek { font-size: 1.2rem; color: var(--text-dim); font-family: 'Cormorant Garamond', serif; font-style: italic; margin: 0 0 2rem; }
+.post__body { font-size: 1.08rem; }
+.post__body p { margin: 0 0 1.3rem; }
+
+.post__quote {
+  margin: 2.5rem 0;
+  padding: 0.4rem 0 0.4rem 1.4rem;
+  border-left: 2px solid var(--gold);
+}
+.post__quote p { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.5rem; line-height: 1.35; margin: 0 0 0.5rem; color: var(--text); }
+.post__quote cite { color: var(--text-dim); font-style: normal; font-size: 0.9rem; }
+
+.post__credits { display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; margin: 2rem 0; padding-top: 1.4rem; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.86rem; }
+
+.post__cta { margin: 3rem 0 1rem; padding: clamp(1.4rem, 5vw, 2.2rem); background: var(--surface); border: 1px solid var(--border); border-radius: 6px; text-align: center; }
+.post__cta p { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; margin: 0 0 1rem; }
+.post__back { margin-top: 2.5rem; }
+
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: var(--gold);
+  color: #1a1509;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 4px;
+}
+.btn:hover { background: var(--gold-hi); text-decoration: none; }
+
+/* --- carousel --- */
+.carousel { position: relative; margin: 0 0 2.2rem; }
+.carousel__track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  gap: 0;
+  border-radius: 4px;
+  scrollbar-width: none;
+}
+.carousel__track::-webkit-scrollbar { display: none; }
+.carousel__slide { flex: 0 0 100%; scroll-snap-align: center; margin: 0; background: var(--surface); }
+.carousel__slide img { width: 100%; height: auto; max-height: 82vh; object-fit: contain; }
+
+.carousel__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(12, 11, 10, 0.6);
+  color: var(--text);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.carousel__nav:hover { background: rgba(12, 11, 10, 0.85); color: var(--gold-hi); }
+.carousel__nav--prev { left: 0.5rem; }
+.carousel__nav--next { right: 0.5rem; }
+
+.carousel__dots { position: absolute; bottom: 0.7rem; left: 0; right: 0; display: flex; justify-content: center; gap: 0.4rem; }
+.carousel__dot { width: 7px; height: 7px; padding: 0; border: none; border-radius: 50%; background: rgba(236, 230, 220, 0.4); cursor: pointer; }
+.carousel__dot[aria-current='true'] { background: var(--gold); }
+
+@media (hover: none) {
+  /* On touch devices the native swipe is enough; keep arrows but they're optional. */
+  .carousel__nav { opacity: 0.85; }
+}
