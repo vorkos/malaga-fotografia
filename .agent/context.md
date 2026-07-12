@@ -173,6 +173,25 @@ export default {
 - `/` → index.html — main portfolio (bilingual ES/EN, default: ES)
 - `/prices.html` → pricing page — sessions from €250. Contains 1 R2 photo: Z52_0501.jpg
 - `/blog/` → the **Journal** index; `/blog/<slug>/` → per-shoot posts. See "Journal / Blog" below.
+- `/apply/` → **Work-With-Me / TFP application** page (terms + safety + form). See "Apply funnel" below.
+
+---
+
+## Apply funnel (added 2026-07-12)
+
+`/apply/` (static `apply/index.html`) — TFP terms + safety statement + a
+low-friction application form + a 4-photo strip. Form POSTs to **`/api/apply`**
+(handler in `_worker.js`):
+- Validates (name + email-or-IG + 18/consent required), honeypot `website` field.
+- **Stores every application to R2** at `applications/<date>/<ts>-<id>.json` (no
+  `/gallery/` route serves that prefix → not web-accessible; read via wrangler).
+- **Emails via Resend** when the `RESEND_API_KEY` secret is set (optional; storage
+  is source of truth). Config in `wrangler.jsonc [vars]`: `APPLY_NOTIFY_TO`
+  (= boss138@gmail.com, must match the Resend account) + `APPLY_FROM`.
+  **To activate email:** `npx wrangler secret put RESEND_API_KEY` (sign up at
+  resend.com with boss138@gmail.com). No redeploy needed.
+- Blog CTAs + homepage `Collaborate` nav (ES+EN) point to `/apply/`.
+- Spam guard is honeypot only for now; Turnstile is a later hardening option.
 
 ---
 
