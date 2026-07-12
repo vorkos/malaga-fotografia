@@ -73,8 +73,9 @@ async function handleApply(request, env) {
   if (env.RESEND_API_KEY && env.APPLY_NOTIFY_TO) {
     try {
       await sendEmail(env, rec);
-    } catch {
-      /* stored anyway */
+      console.log(`apply: emailed notification for ${rec.id}`);
+    } catch (e) {
+      console.log(`apply: email failed for ${rec.id}: ${e}`);
     }
   }
 
@@ -82,6 +83,10 @@ async function handleApply(request, env) {
 }
 
 async function sendEmail(env, rec) {
+  // RESEND_API_KEY is a Secrets Store binding (async .get()); tolerate a plain
+  // string too (classic `wrangler secret put`) so either setup works.
+  const apiKey =
+    typeof env.RESEND_API_KEY?.get === 'function' ? await env.RESEND_API_KEY.get() : env.RESEND_API_KEY;
   const esc = (s) => String(s || '').replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
   const lines = [
     `Name: ${rec.name}`,
@@ -97,7 +102,7 @@ async function sendEmail(env, rec) {
     <pre style="font:14px/1.6 -apple-system,sans-serif;white-space:pre-wrap;background:#f7f4ee;padding:16px;border-radius:8px">${esc(lines.join('\n'))}</pre>`;
   const r = await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: { authorization: `Bearer ${env.RESEND_API_KEY}`, 'content-type': 'application/json' },
+    headers: { authorization: `Bearer ${apiKey}`, 'content-type': 'application/json' },
     body: JSON.stringify({
       from: env.APPLY_FROM || 'Málaga Fotografía <onboarding@resend.dev>',
       to: [env.APPLY_NOTIFY_TO],

@@ -24,5 +24,14 @@
   "vars": {
     "APPLY_NOTIFY_TO": "boss138@gmail.com",
     "APPLY_FROM": "Málaga Fotografía <onboarding@resend.dev>"
-  }
+  },
+  // Resend API key lives in the account Secrets Store (secret name "resend" in
+  // default_secrets_store). Accessed in the Worker via `await env.RESEND_API_KEY.get()`.
+  "secrets_store_secrets": [
+    {
+      "binding": "RESEND_API_KEY",
+      "store_id": "d86cc48d2b9e44068cd94bc34f40179e",
+      "secret_name": "resend"
+    }
+  ]
 }
