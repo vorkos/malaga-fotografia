@@ -6,7 +6,7 @@
 
 | Folder(s) | Display name | Instagram / link | Notes |
 |-----------|--------------|------------------|-------|
-| `barbara`, `barbara-cia` | **Barbara Cia** | [@cia_model_official](https://instagram.com/cia_model_official) | Model & actress. Performing since age 8 (opera, theatre), studied applied-art jewellery, modelled in London (Toni&Guy hair model, Wella Pro, fashion commercials). Based in Málaga; traveller, sailor, nature lover, coffee addict. Professional, easy, fun. **Note:** two folders exist (first post used `barbara`, 2nd used `barbara-cia`) — unify later. Posts: `blog/barbara/` (13-06 session), `blog/barbara-cia-light-and-water-in-malaga/` (25-06 session). |
+| `barbara` | **Barbara Cia** | [@cia_model_official](https://instagram.com/cia_model_official) | Model & actress. Performing since age 8 (opera, theatre), studied applied-art jewellery, modelled in London (Toni&Guy hair model, Wella Pro, fashion commercials). Based in Málaga; traveller, sailor, nature lover, coffee addict. Professional, easy, fun. Both shoots now in one folder `gallery/barbara/` (merged 2026-07-12; the old `barbara-cia` folder was deleted). Posts: `blog/barbara/` (13-06 session), `blog/barbara-cia-light-and-water-in-malaga/` (25-06 session — URL slug kept). |
 | `mariia` | Mariia | — | — |
 | `iryna` | Iryna | — | — |
 | `iryna-r` | Iryna R | — | Distinct from Iryna. |
