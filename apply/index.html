@@ -21,7 +21,10 @@
     .apply{max-width:760px;margin:0 auto;padding:clamp(2rem,6vw,3.5rem) clamp(1rem,5vw,1.6rem)}
     .apply__eyebrow{color:var(--gold);font-size:.75rem;text-transform:uppercase;letter-spacing:.14em;margin:0 0 .5rem}
     .apply h1{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(2.4rem,9vw,3.8rem);line-height:1.04;margin:0 0 .8rem}
-    .apply__lead{font-size:1.15rem;color:var(--text-dim);font-family:'Cormorant Garamond',serif;font-style:italic;margin:0 0 2.4rem}
+    .apply__lead{font-size:1.15rem;color:var(--text-dim);font-family:'Cormorant Garamond',serif;font-style:italic;margin:0 0 1.6rem}
+    .apply__strip{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin:0 0 2.4rem}
+    @media(min-width:560px){.apply__strip{grid-template-columns:repeat(4,1fr)}}
+    .apply__strip img{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:3px;background:var(--surface)}
     .apply h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:1.7rem;margin:2.4rem 0 .8rem}
     .apply ul{padding-left:1.1rem;margin:0 0 1rem}
     .apply li{margin:.35rem 0}
@@ -57,6 +60,13 @@
     <p class="apply__lead">I collaborate with models on fine-art portrait, boudoir and nude work
       across Málaga and the Costa del Sol. If the images in the Journal speak to you, read the
       terms below and apply — I answer every serious message personally.</p>
+
+    <div class="apply__strip">
+      <img src="/gallery/barbara/Z52_0576-small.jpg" alt="" loading="lazy" decoding="async">
+      <img src="/gallery/Z52_0891-small.jpg" alt="" loading="lazy" decoding="async">
+      <img src="/gallery/Z52_1820-small.jpg" alt="" loading="lazy" decoding="async">
+      <img src="/gallery/Z52_2867-small.jpg" alt="" loading="lazy" decoding="async">
+    </div>
 
     <h2>What TFP means here</h2>
     <ul>
