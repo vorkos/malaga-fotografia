@@ -192,11 +192,16 @@ low-friction application form + a 4-photo strip. Form POSTs to **`/api/apply`**
 - Validates (name + email-or-IG + 18/consent required), honeypot `website` field.
 - **Stores every application to R2** at `applications/<date>/<ts>-<id>.json` (no
   `/gallery/` route serves that prefix → not web-accessible; read via wrangler).
-- **Emails via Resend** when the `RESEND_API_KEY` secret is set (optional; storage
-  is source of truth). Config in `wrangler.jsonc [vars]`: `APPLY_NOTIFY_TO`
-  (= boss138@gmail.com, must match the Resend account) + `APPLY_FROM`.
-  **To activate email:** `npx wrangler secret put RESEND_API_KEY` (sign up at
-  resend.com with boss138@gmail.com). No redeploy needed.
+- **Emails via Resend — LIVE (2026-07-12, verified).** The key is in the account
+  **Secrets Store** (secret `resend` in `default_secrets_store`,
+  store_id `d86cc48d2b9e44068cd94bc34f40179e`), bound in `wrangler.jsonc` as
+  `secrets_store_secrets` → `RESEND_API_KEY`, and read via
+  `await env.RESEND_API_KEY.get()` (async — NOT a plain string). Config in
+  `[vars]`: `APPLY_NOTIFY_TO=boss138@gmail.com` (must match the Resend account),
+  `APPLY_FROM` (currently `onboarding@resend.dev` test sender — can only email
+  the account owner until a domain is verified). Worker logs `apply: emailed…` /
+  `apply: email failed…` for `wrangler tail`. Storage is source of truth, so
+  email is best-effort.
 - Blog CTAs + homepage `Collaborate` nav (ES+EN) point to `/apply/`.
 - Spam guard is honeypot only for now; Turnstile is a later hardening option.
 
