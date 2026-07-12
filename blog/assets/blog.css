@@ -138,6 +138,17 @@ img { max-width: 100%; display: block; }
 }
 .btn:hover { background: var(--gold-hi); text-decoration: none; }
 
+/* --- standalone cover hero --- */
+.post__hero { margin: 0 0 1.4rem; }
+.post__hero img {
+  width: 100%;
+  height: auto;
+  max-height: 88vh;
+  object-fit: contain;
+  border-radius: 4px;
+  background: var(--surface);
+}
+
 /* --- carousel --- */
 .carousel { position: relative; margin: 0 0 2.2rem; }
 .carousel__track {

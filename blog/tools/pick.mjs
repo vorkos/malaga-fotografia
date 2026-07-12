@@ -217,7 +217,7 @@ const server = createServer((req, res) => {
     return send(res, 200, readFileSync(p), MIME[extname(safe).toLowerCase()] || 'application/octet-stream');
   }
   if (url.pathname === '/api/draft' && req.method === 'POST') {
-    if (!AI_DRAFT) return send(res, 403, JSON.stringify({ error: 'AI draft is disabled. Relaunch with --ai to enable it.' }));
+    if (!AI_DRAFT) return send(res, 403, JSON.stringify({ error: 'AI rewrite is disabled (you launched with --no-ai). Relaunch without it to enable.' }));
     let body = '';
     req.on('data', (c) => (body += c));
     req.on('end', () => {
@@ -258,15 +258,35 @@ const server = createServer((req, res) => {
         ok: build.ok,
         uploaded: uploads.length,
         mdPath,
-        postUrl: `${SITE}/blog/${slug}/`,
-        previewHint: `Review locally, then: git add -A && git commit && git push origin main`,
+        previewUrl: `http://127.0.0.1:${PORT}/blog/${slug}/`,
+        liveUrl: `${SITE}/blog/${slug}/`,
+        previewHint: `Preview at the local link above (it renders now). To publish: git add -A && git commit && git push origin main`,
         build: build.out.trim().split('\n').slice(-4).join('\n'),
       }));
     });
     return;
   }
+  // Static fallback: serve the built site from the repo so the local preview
+  // link (http://127.0.0.1:PORT/blog/<slug>/) renders before you push. Images
+  // load from production R2 (absolute URLs), which they already are post-upload.
+  if (req.method === 'GET') return serveStatic(res, url.pathname);
   send(res, 404, 'not found', 'text/plain');
 });
+
+const STATIC_MIME = {
+  '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript',
+  '.json': 'application/json', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', ...MIME,
+};
+function serveStatic(res, urlPath) {
+  const root = resolve(REPO_ROOT);
+  let full = resolve(root, decodeURIComponent(urlPath).replace(/^\/+/, ''));
+  if (full !== root && !full.startsWith(root + (process.platform === 'win32' ? '\\' : '/'))) {
+    return send(res, 403, 'forbidden', 'text/plain'); // path-traversal guard
+  }
+  if (existsSync(full) && statSync(full).isDirectory()) full = join(full, 'index.html');
+  if (!existsSync(full) || !statSync(full).isFile()) return send(res, 404, 'not found', 'text/plain');
+  return send(res, 200, readFileSync(full), STATIC_MIME[extname(full).toLowerCase()] || 'application/octet-stream');
+}
 
 server.listen(PORT, '127.0.0.1', () => {
   console.log(`\n  Photo picker ready:  http://127.0.0.1:${PORT}`);

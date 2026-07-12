@@ -71,15 +71,23 @@ function renderPost(post) {
   const title = data.title ?? 'Untitled';
   const summary = data.summary ?? '';
   const url = `${SITE}/blog/${slug}/`;
-  const cover = data.cover ?? data.images?.[0];
-  const images = Array.isArray(data.images) ? data.images : [];
+  const allImages = Array.isArray(data.images) ? data.images : [];
+  const cover = data.cover ?? allImages[0];
+  const coverUrl = cover ? imgUrl(cover) : '';
+  // Cover shows as a standalone hero above the story; the carousel holds the
+  // rest of the shoot (cover excluded so it isn't shown twice).
+  const images = allImages.filter((src) => imgUrl(src) !== coverUrl);
+
+  const hero = cover
+    ? `<figure class="post__hero"><img src="${esc(coverUrl)}" alt="${esc(title)}" loading="eager" decoding="async"></figure>`
+    : '';
 
   const slides = images
     .map(
       (src, i) =>
         `<figure class="carousel__slide"><img src="${esc(imgUrl(src))}" alt="${esc(
           `${title} — ${i + 1}`,
-        )}" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async"></figure>`,
+        )}" loading="lazy" decoding="async"></figure>`,
     )
     .join('\n          ');
 
@@ -156,6 +164,7 @@ function renderPost(post) {
       <p class="post__eyebrow">${esc(data.location ?? '')}${data.location && data.date ? ' · ' : ''}${esc(fmtDate(data.date, lang))}</p>
       <h1 class="post__title">${esc(title)}</h1>
       ${summary ? `<p class="post__dek">${esc(summary)}</p>` : ''}
+      ${hero}
       ${carousel}
       <div class="post__body">
         ${bodyHtml}

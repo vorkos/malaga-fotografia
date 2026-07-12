@@ -114,7 +114,7 @@ $('publish').onclick=async()=>{
     const r=await fetch('/api/publish',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
     const d=await r.json();
     if(!r.ok){$('result').textContent='✗ '+(d.error||'failed');}
-    else $('result').innerHTML=`✓ Uploaded ${d.uploaded} photos · wrote ${d.mdPath}\nPreview: <code>${d.postUrl}</code>\nTo go live: <code>${d.previewHint}</code>`;
+    else $('result').innerHTML=`✓ Uploaded ${d.uploaded} photos.<br><b>Preview now:</b> <a href="${d.previewUrl}" target="_blank">${d.previewUrl}</a><br>To publish: <code>git add -A &amp;&amp; git commit &amp;&amp; git push origin main</code> → then live at <code>${d.liveUrl}</code>`;
   }catch(err){$('result').textContent='✗ '+err.message;}
   $('publish').disabled=false;
 };
