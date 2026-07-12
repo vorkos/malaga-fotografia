@@ -73,13 +73,15 @@ function uploadToR2(model, file) {
   const ct = MIME[extname(file).toLowerCase()] || 'application/octet-stream';
   // wrangler --remote hiccups intermittently (token refresh / rate limit), so
   // retry a few times with backoff before giving up on a file.
+  // Run via the shell so `npx` resolves to npx.cmd on Windows. Spawning the
+  // .cmd directly throws EINVAL on modern Node (CVE-2024-27980 hardening); the
+  // shell wrapper avoids that. Paths are double-quoted for cmd/sh.
+  const cmd = `npx wrangler r2 object put "${key}" --file="${localPath}" --content-type=${ct} --remote`;
   let last;
   for (let attempt = 1; attempt <= 4; attempt++) {
-    const r = spawnSync(
-      process.platform === 'win32' ? 'npx.cmd' : 'npx',
-      ['wrangler', 'r2', 'object', 'put', key, `--file=${localPath}`, `--content-type=${ct}`, '--remote'],
-      { cwd: REPO_ROOT, encoding: 'utf8', timeout: 90000, maxBuffer: 16 * 1024 * 1024, windowsHide: true },
-    );
+    const r = spawnSync(cmd, {
+      shell: true, cwd: REPO_ROOT, encoding: 'utf8', timeout: 90000, maxBuffer: 16 * 1024 * 1024, windowsHide: true,
+    });
     if (r.status === 0) return { ok: true, key, attempts: attempt };
     last = r;
     // small backoff; spawnSync is sync so a busy-wait sleep keeps it simple
@@ -123,8 +125,9 @@ function writePost(data) {
 }
 
 function runBuild() {
-  const r = spawnSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['run', 'build:blog'], {
-    cwd: REPO_ROOT, encoding: 'utf8',
+  // shell:true so `npm` resolves to npm.cmd on Windows (see uploadToR2 note).
+  const r = spawnSync('npm run build:blog', {
+    shell: true, cwd: REPO_ROOT, encoding: 'utf8', maxBuffer: 16 * 1024 * 1024, windowsHide: true,
   });
   return { ok: r.status === 0, out: (r.stdout || '') + (r.stderr || '') };
 }
