@@ -228,12 +228,17 @@ trust and attract TFP models. Lives at **`malaga-fotografia.com/blog`**.
   served by the existing `_worker.js` /gallery/ route (no worker change). The
   108 portfolio photos stay flat at `gallery/Z52_*.jpg` (wired to the homepage
   rotation — do NOT move them).
-- **Authoring tool (local):** `npm run pick -- "<shoot-folder>" [--model <name>]`
+- **Authoring tool (local):** `npm run pick -- "<shoot-folder>" [--model <name>] [--ai]`
   → `blog/tools/pick.mjs` serves a local picker page: click/order photos, fill
-  the story, Publish → uploads picks to `gallery/<model>/`, writes the post
-  `.md`, runs the build. It never pushes — review the local preview, then
+  the story, Publish → uploads picks to `gallery/<model>/` (wrangler run via
+  `shell:true` — spawning npx.cmd directly EINVALs on Windows/modern Node), writes
+  the post `.md`, runs the build. It never pushes — review the local preview, then
   `git push origin main` to deploy. (`blog/tools`, `blog/content`, `blog/build.mjs`
   are in `.assetsignore` so they're not served.)
+  **`--ai` (opt-in, off by default):** adds a "Draft with AI" button that sends up
+  to 5 sampled photos to the local `claude` CLI (`--model sonnet`, Read-only) and
+  pre-fills empty text fields (~$0.04/photo, against whatever the CLI is
+  authenticated with; leaves the model quote as a placeholder for her real words).
 - **Live posts:** `barbara` (13-06-26 session, 8 single-person frames,
   Barbara Cia @cia_model_official).
 - **Pending:** a 2nd Barbara post from the 25-06-26 shoot (folder has a 2nd
