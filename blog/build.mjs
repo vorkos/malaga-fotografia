@@ -148,7 +148,7 @@ function renderPost(post) {
 <body>
   <header class="site-head">
     <a class="site-head__brand" href="/">${BRAND}</a>
-    <nav class="site-head__nav"><a href="/blog/">${lang === 'es' ? 'Diario' : 'Journal'}</a><a href="/#collaborate">${lang === 'es' ? 'Colaborar' : 'Collaborate'}</a></nav>
+    <nav class="site-head__nav"><a href="/blog/">${lang === 'es' ? 'Diario' : 'Journal'}</a><a href="/apply/">${lang === 'es' ? 'Colaborar' : 'Collaborate'}</a></nav>
   </header>
 
   <main class="post">
@@ -164,7 +164,7 @@ function renderPost(post) {
       ${credits}
       <section class="post__cta">
         <p>${ctaText}</p>
-        <a class="btn" href="/#collaborate">${ctaBtn}</a>
+        <a class="btn" href="/apply/">${ctaBtn}</a>
       </section>
     </article>
     <p class="post__back"><a href="/blog/">← ${lang === 'es' ? 'Todas las historias' : 'All stories'}</a></p>
@@ -213,7 +213,7 @@ function renderIndex(posts) {
 <body>
   <header class="site-head">
     <a class="site-head__brand" href="/">${BRAND}</a>
-    <nav class="site-head__nav"><a href="/blog/" aria-current="page">Journal</a><a href="/#collaborate">Collaborate</a></nav>
+    <nav class="site-head__nav"><a href="/blog/" aria-current="page">Journal</a><a href="/apply/">Collaborate</a></nav>
   </header>
 
   <main class="journal">

@@ -15,5 +15,14 @@
   ],
   "r2_buckets": [
     { "binding": "PHOTOS", "bucket_name": "photos" }
-  ]
+  ],
+  // TFP Apply form (/apply/ -> POST /api/apply). Applications are stored in R2
+  // under applications/. Email notification is optional: it activates once the
+  // RESEND_API_KEY secret is set (`wrangler secret put RESEND_API_KEY`). Until
+  // then applications still save to R2. APPLY_NOTIFY_TO must be the address your
+  // Resend account owns (test sender can only email the account owner).
+  "vars": {
+    "APPLY_NOTIFY_TO": "boss138@gmail.com",
+    "APPLY_FROM": "Málaga Fotografía <onboarding@resend.dev>"
+  }
 }
