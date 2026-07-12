@@ -25,7 +25,14 @@
 ## Hosting & Deploy
 
 - **Platform:** Cloudflare Workers with Static Assets binding
-- **R2 bucket:** `photos` (binding: `PHOTOS`) — 108 photos served at `/gallery/*`
+- **R2 bucket:** `photos` (binding: `PHOTOS`) — photos served at `/gallery/*`.
+  **Organised by model (2026-07-12):** every gallery photo lives under
+  `gallery/<model>/<file>` (10 models — see `.agent/photos-by-model.json`).
+  The homepage rotation pool entries and static slot `src`s use the
+  `<model>/<file>` form (JS builds `'/gallery/' + entry`). Blog uses
+  `gallery/barbara/*-small.jpg`. Also under this prefix but NOT web-served:
+  `applications/` (Apply-form submissions). When adding/moving photos, keep the
+  model-folder convention and update any homepage/prices/apply references.
 - **Live URLs:** `https://malaga-fotografia.com/` · `https://www.malaga-fotografia.com/` · `https://photography.boss138.workers.dev/`
 - **Repo:** github.com/vorkos/malaga-fotografia (branch: `main`)
 - **Deploy:** Cloudflare Builds auto-deploys on every push to `main` — no manual step needed
