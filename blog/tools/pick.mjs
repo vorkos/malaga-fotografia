@@ -60,16 +60,33 @@ function send(res, code, body, type = 'application/json') {
   res.end(body);
 }
 
+function cleanErr(r) {
+  // strip ANSI/spinner noise; keep the last couple of meaningful lines
+  const raw = `${r.stderr || ''}\n${r.stdout || ''}`.replace(/\x1b\[[0-9;]*m/g, '').replace(/[⠁-⣿⛅▲✘│─]/g, '');
+  const lines = raw.split('\n').map((l) => l.trim()).filter((l) => l && !/^wrangler \d/.test(l) && !/report any issues/i.test(l));
+  return lines.slice(-2).join(' — ') || (r.error ? String(r.error) : `exit ${r.status}`);
+}
+
 function uploadToR2(model, file) {
   const key = `${BUCKET}/gallery/${model}/${file}`;
   const localPath = join(FOLDER, file);
   const ct = MIME[extname(file).toLowerCase()] || 'application/octet-stream';
-  const r = spawnSync(
-    process.platform === 'win32' ? 'npx.cmd' : 'npx',
-    ['wrangler', 'r2', 'object', 'put', key, `--file=${localPath}`, `--content-type=${ct}`, '--remote'],
-    { cwd: REPO_ROOT, encoding: 'utf8' },
-  );
-  return { ok: r.status === 0, key, err: (r.stderr || '').trim().split('\n').slice(-1)[0] };
+  // wrangler --remote hiccups intermittently (token refresh / rate limit), so
+  // retry a few times with backoff before giving up on a file.
+  let last;
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    const r = spawnSync(
+      process.platform === 'win32' ? 'npx.cmd' : 'npx',
+      ['wrangler', 'r2', 'object', 'put', key, `--file=${localPath}`, `--content-type=${ct}`, '--remote'],
+      { cwd: REPO_ROOT, encoding: 'utf8', timeout: 90000, maxBuffer: 16 * 1024 * 1024, windowsHide: true },
+    );
+    if (r.status === 0) return { ok: true, key, attempts: attempt };
+    last = r;
+    // small backoff; spawnSync is sync so a busy-wait sleep keeps it simple
+    const until = Date.now() + attempt * 1500;
+    while (Date.now() < until) { /* backoff */ }
+  }
+  return { ok: false, key, err: cleanErr(last) };
 }
 
 function writePost(data) {
@@ -112,6 +129,55 @@ function runBuild() {
   return { ok: r.status === 0, out: (r.stdout || '') + (r.stderr || '') };
 }
 
+// AI draft: call the local `claude` CLI headless (Sonnet) to look at a sample of
+// the selected photos and pre-fill the post text fields. Read-only (Read tool),
+// no network beyond the model; the photographer edits the result before publish.
+const MAX_DRAFT_IMAGES = 5;
+function sampleImages(order) {
+  if (order.length <= MAX_DRAFT_IMAGES) return order.slice();
+  // spread evenly across the selection so the model sees the shoot's range
+  const step = (order.length - 1) / (MAX_DRAFT_IMAGES - 1);
+  return Array.from({ length: MAX_DRAFT_IMAGES }, (_, i) => order[Math.round(i * step)]);
+}
+
+function aiDraft(modelName, order) {
+  const sample = sampleImages(order);
+  const model = modelName || 'the model';
+  const prompt = `You are helping a fine-art portrait, boudoir and nude photographer in Málaga write a short Journal (blog) post about a collaborative TFP photo shoot with a model named "${model}".
+
+Read these image files from the shoot (they are in the current directory) using the Read tool:
+${sample.map((f) => `- ${f}`).join('\n')}
+
+Then write tasteful, professional, warm post text. Respond with ONLY a JSON object (no prose, no markdown code fences) with exactly these keys:
+- "title": short evocative title, format "${model} — <theme or place>". Human, not clickbait.
+- "summary": one sentence, max ~20 words, for the intro and social preview.
+- "story": 120-180 words, first person from the photographer; narrative and warm; describe the mood, light and sense of collaboration visible in the images; emphasise the model's professionalism and ease; do NOT invent specific unverifiable facts (exact places, dates, events); SFW language only.
+- "location": a short guess at the setting shown (e.g. "Indoor studio, Málaga"), or just "Málaga" if unclear.
+- "quote": do NOT fabricate the model's words — put exactly this placeholder: "[Add a sentence from ${model} about her experience]".
+
+Base everything only on what is actually visible. Keep it SFW and respectful.`;
+
+  const bin = 'claude';
+  const r = spawnSync(bin, ['-p', '--model', 'sonnet', '--allowed-tools', 'Read', '--output-format', 'json'], {
+    cwd: FOLDER,
+    input: prompt,
+    encoding: 'utf8',
+    timeout: 180000,
+    maxBuffer: 32 * 1024 * 1024,
+    windowsHide: true,
+  });
+  if (r.status !== 0) {
+    return { ok: false, error: `claude CLI exited ${r.status}: ${(r.stderr || r.stdout || '').slice(0, 300)}` };
+  }
+  let envelope;
+  try { envelope = JSON.parse(r.stdout); } catch { return { ok: false, error: 'could not parse claude output' }; }
+  if (envelope.is_error) return { ok: false, error: envelope.result || 'claude returned an error' };
+  let text = String(envelope.result || '').trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
+  let draft;
+  try { draft = JSON.parse(text); } catch { return { ok: false, error: 'model did not return valid JSON', raw: text.slice(0, 400) }; }
+  return { ok: true, draft, cost: envelope.total_cost_usd, images: sample.length };
+}
+
 const server = createServer((req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
 
@@ -127,6 +193,22 @@ const server = createServer((req, res) => {
     const p = join(FOLDER, safe);
     if (!IMG_EXT.has(extname(safe).toLowerCase()) || !existsSync(p)) return send(res, 404, 'nf', 'text/plain');
     return send(res, 200, readFileSync(p), MIME[extname(safe).toLowerCase()] || 'application/octet-stream');
+  }
+  if (url.pathname === '/api/draft' && req.method === 'POST') {
+    let body = '';
+    req.on('data', (c) => (body += c));
+    req.on('end', () => {
+      let data;
+      try { data = JSON.parse(body); } catch { return send(res, 400, JSON.stringify({ error: 'bad json' })); }
+      const order = Array.isArray(data.order) ? data.order : [];
+      if (!order.length) return send(res, 400, JSON.stringify({ error: 'select photos first' }));
+      console.log(`  drafting text with Sonnet from ${Math.min(order.length, MAX_DRAFT_IMAGES)} image(s)…`);
+      const r = aiDraft(data.model, order);
+      if (!r.ok) return send(res, 500, JSON.stringify({ error: r.error, raw: r.raw }));
+      console.log(`  draft ready (cost ~$${(r.cost || 0).toFixed(3)})`);
+      return send(res, 200, JSON.stringify(r));
+    });
+    return;
   }
   if (url.pathname === '/api/publish' && req.method === 'POST') {
     let body = '';

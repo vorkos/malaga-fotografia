@@ -44,6 +44,7 @@
     <label>Quote by<input id="f-quoteby"></label>
   </div>
   <div class="bar">
+    <button id="draft" title="Look at the selected photos with Claude Sonnet and pre-fill the text fields">✨ Draft with AI</button>
     <button id="publish">Publish (upload + build)</button>
     <button class="ghost" id="clear">Clear selection</button>
     <span class="count"><b id="nsel">0</b> selected · click order = carousel order · ★ = cover</span>
@@ -82,6 +83,21 @@ $('grid').addEventListener('click',e=>{
   render();
 });
 $('clear').onclick=()=>{selected=[];cover=null;render();};
+$('draft').onclick=async()=>{
+  if(!selected.length)return alert('Select the photos for the post first.');
+  $('draft').disabled=true; $('result').style.display='block'; $('result').textContent='✨ Looking at the photos with Sonnet… (a few seconds)';
+  try{
+    const r=await fetch('/api/draft',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({model:$('f-model').value,order:selected})});
+    const d=await r.json();
+    if(!r.ok||!d.ok)throw new Error(d.error||'draft failed');
+    const dr=d.draft, setIfEmpty=(id,v)=>{const el=$(id); if(v&&!el.value.trim())el.value=v;};
+    setIfEmpty('f-title',dr.title); setIfEmpty('f-summary',dr.summary); setIfEmpty('f-story',dr.story);
+    setIfEmpty('f-location',dr.location); setIfEmpty('f-quote',dr.quote);
+    if($('f-model').value.trim()&&!$('f-quoteby').value.trim())$('f-quoteby').value=$('f-model').value.trim();
+    $('result').innerHTML=`✨ Draft filled from ${d.images} photo(s) (~$${(d.cost||0).toFixed(3)}). Review &amp; edit — the quote is a placeholder for <b>${$('f-model').value||'the model'}</b>'s own words. Empty fields only were filled.`;
+  }catch(err){$('result').textContent='✗ '+err.message;}
+  $('draft').disabled=false;
+};
 $('publish').onclick=async()=>{
   if(!selected.length)return alert('Select at least one photo.');
   if(!$('f-model').value.trim())return alert('Enter the model name.');
