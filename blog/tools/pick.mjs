@@ -40,10 +40,9 @@ const positional = args.filter((a, i) => !a.startsWith('--') && !(i > 0 && args[
 const FOLDER = positional[0] ? resolve(positional[0]) : null;
 const MODEL_DEFAULT = opt('model', '');
 const PORT = Number(opt('port', '8150'));
-// AI "Draft with AI" is OFF by default so it never spawns the paid model
-// unless explicitly enabled with --ai (its ~$0.04/photo counts against whatever
-// your local `claude` CLI is authenticated with).
-const AI_DRAFT = args.includes('--ai');
+// AI "Rewrite with AI" is ON by default (Kostya's Claude Pro covers it — usage,
+// never a separate charge). Disable for a run with --no-ai.
+const AI_DRAFT = !args.includes('--no-ai');
 
 if (!FOLDER || !existsSync(FOLDER) || !statSync(FOLDER).isDirectory()) {
   console.error(`\nUsage: node blog/tools/pick.mjs "<shoot-folder>" [--model <name>] [--port 8150]`);
@@ -136,9 +135,10 @@ function runBuild() {
   return { ok: r.status === 0, out: (r.stdout || '') + (r.stderr || '') };
 }
 
-// AI draft: call the local `claude` CLI headless (Sonnet) to look at a sample of
-// the selected photos and pre-fill the post text fields. Read-only (Read tool),
-// no network beyond the model; the photographer edits the result before publish.
+// AI rewrite: call the local `claude` CLI headless (Sonnet) to REWRITE the post
+// text fields from the photographer's own draft + a sample of the selected
+// photos + optional reference info about the model (pasted bio and/or a link).
+// Read-only + optional WebFetch; the photographer edits the result before publish.
 const MAX_DRAFT_IMAGES = 5;
 function sampleImages(order) {
   if (order.length <= MAX_DRAFT_IMAGES) return order.slice();
@@ -147,25 +147,40 @@ function sampleImages(order) {
   return Array.from({ length: MAX_DRAFT_IMAGES }, (_, i) => order[Math.round(i * step)]);
 }
 
-function aiDraft(modelName, order) {
+function aiDraft(data) {
+  const order = Array.isArray(data.order) ? data.order : [];
   const sample = sampleImages(order);
-  const model = modelName || 'the model';
+  const model = (data.model || '').trim() || 'the model';
+  const ref = (data.ref || '').slice(0, 4000).trim();
+  const hasUrl = /https?:\/\//i.test(ref);
+  const cur = (k) => ((data[k] || '').toString().trim() || '(empty)');
   const prompt = `You are helping a fine-art portrait, boudoir and nude photographer in Málaga write a short Journal (blog) post about a collaborative TFP photo shoot with a model named "${model}".
 
-Read these image files from the shoot (they are in the current directory) using the Read tool:
+The photographer's current draft of the fields (may be rough, may be empty) — keep their facts and intent, improve the writing:
+- title: ${cur('title')}
+- summary: ${cur('summary')}
+- story: ${cur('story')}
+- location: ${cur('location')}
+- quote: ${cur('quote')}
+
+Reference about the model (may include a link and/or pasted bio text) — use it to enrich the writing where relevant:
+${ref || '(none provided)'}
+
+Read these photos from the shoot (they are in the current directory) with the Read tool:
 ${sample.map((f) => `- ${f}`).join('\n')}
+${hasUrl ? 'If a URL is included in the reference, you may use WebFetch to read it for extra context; ignore it if it fails.' : ''}
 
-Then write tasteful, professional, warm post text. Respond with ONLY a JSON object (no prose, no markdown code fences) with exactly these keys:
-- "title": short evocative title, format "${model} — <theme or place>". Human, not clickbait.
+Rewrite and polish ALL the fields. Keep the photographer's facts and intent, fix grammar and flow, make it warm, human, professional and SFW. Weave in relevant, verifiable background from the reference — do NOT invent facts that are not supported by the photographer's input, the reference, or clearly visible in the photos. Guidelines:
+- "title": "${model} — <theme or place>", evocative, not clickbait.
 - "summary": one sentence, max ~20 words, for the intro and social preview.
-- "story": 120-180 words, first person from the photographer; narrative and warm; describe the mood, light and sense of collaboration visible in the images; emphasise the model's professionalism and ease; do NOT invent specific unverifiable facts (exact places, dates, events); SFW language only.
-- "location": a short guess at the setting shown (e.g. "Indoor studio, Málaga"), or just "Málaga" if unclear.
-- "quote": do NOT fabricate the model's words — put exactly this placeholder: "[Add a sentence from ${model} about her experience]".
+- "story": 120-180 words, first person from the photographer.
+- "location": short setting (e.g. "Rooftop and pool, Málaga"), or "Málaga" if unclear.
+- "quote": do NOT fabricate the model's words. If the photographer supplied a quote above, polish it lightly. Otherwise output exactly: "[Add a sentence from ${model} about her experience]".
 
-Base everything only on what is actually visible. Keep it SFW and respectful.`;
+Respond with ONLY a JSON object with exactly these keys: title, summary, story, location, quote. No prose, no markdown code fences.`;
 
-  const bin = 'claude';
-  const r = spawnSync(bin, ['-p', '--model', 'sonnet', '--allowed-tools', 'Read', '--output-format', 'json'], {
+  const tools = hasUrl ? ['Read', 'WebFetch'] : ['Read'];
+  const r = spawnSync('claude', ['-p', '--model', 'sonnet', '--allowed-tools', ...tools, '--output-format', 'json'], {
     cwd: FOLDER,
     input: prompt,
     encoding: 'utf8',
@@ -210,8 +225,8 @@ const server = createServer((req, res) => {
       try { data = JSON.parse(body); } catch { return send(res, 400, JSON.stringify({ error: 'bad json' })); }
       const order = Array.isArray(data.order) ? data.order : [];
       if (!order.length) return send(res, 400, JSON.stringify({ error: 'select photos first' }));
-      console.log(`  drafting text with Sonnet from ${Math.min(order.length, MAX_DRAFT_IMAGES)} image(s)…`);
-      const r = aiDraft(data.model, order);
+      console.log(`  rewriting text with Sonnet from ${Math.min(order.length, MAX_DRAFT_IMAGES)} image(s)…`);
+      const r = aiDraft(data);
       if (!r.ok) return send(res, 500, JSON.stringify({ error: r.error, raw: r.raw }));
       console.log(`  draft ready (cost ~$${(r.cost || 0).toFixed(3)})`);
       return send(res, 200, JSON.stringify(r));
@@ -257,5 +272,5 @@ server.listen(PORT, '127.0.0.1', () => {
   console.log(`\n  Photo picker ready:  http://127.0.0.1:${PORT}`);
   console.log(`  Folder: ${FOLDER}`);
   console.log(`  ${listImages().length} images.`);
-  console.log(`  AI draft: ${AI_DRAFT ? 'ON (uses your claude CLI, ~$0.04/photo)' : 'off — add --ai to enable'}. Ctrl+C to stop.\n`);
+  console.log(`  AI rewrite: ${AI_DRAFT ? 'ON (Sonnet via your claude CLI)' : 'off (--no-ai)'}. Ctrl+C to stop.\n`);
 });

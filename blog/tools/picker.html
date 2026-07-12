@@ -40,11 +40,12 @@
     <label>Language<select id="f-lang"><option value="en">English</option><option value="es">Español</option></select></label>
     <label style="grid-column:1/-1">Summary (one line, used for search/social)<input id="f-summary"></label>
     <label style="grid-column:1/-1">Story<textarea id="f-story"></textarea></label>
+    <label style="grid-column:1/-1">Model page / reference — paste her bio or about text, and/or a link (used by "Rewrite with AI")<textarea id="f-ref" placeholder="e.g. https://instagram.com/cia_model_official  and/or pasted bio: 'Barbara Cia — model & actress, based in Málaga…'"></textarea></label>
     <label>Quote (model's words)<input id="f-quote"></label>
     <label>Quote by<input id="f-quoteby"></label>
   </div>
   <div class="bar">
-    <button id="draft" title="Look at the selected photos with Claude Sonnet and pre-fill the text fields">✨ Draft with AI</button>
+    <button id="draft" title="Rewrite the text fields from your input + the selected photos + the model reference, using Claude Sonnet">✨ Rewrite with AI</button>
     <button id="publish">Publish (upload + build)</button>
     <button class="ghost" id="clear">Clear selection</button>
     <span class="count"><b id="nsel">0</b> selected · click order = carousel order · ★ = cover</span>
@@ -58,7 +59,7 @@ const $=(id)=>document.getElementById(id);
 
 fetch('/api/config').then(r=>r.json()).then(cfg=>{
   images=cfg.images; $('folder').textContent='· '+cfg.folder+' ('+images.length+')';
-  if(!cfg.aiDraft){ const b=$('draft'); if(b) b.remove(); }  // off unless launched with --ai
+  if(!cfg.aiDraft){ const b=$('draft'); if(b) b.remove(); }  // hidden when launched with --no-ai
   if(cfg.model) $('f-model').value=cfg.model;
   $('f-date').value=new Date().toISOString().slice(0,10);
   render();
@@ -86,18 +87,21 @@ $('grid').addEventListener('click',e=>{
 $('clear').onclick=()=>{selected=[];cover=null;render();};
 $('draft').onclick=async()=>{
   if(!selected.length)return alert('Select the photos for the post first.');
-  $('draft').disabled=true; $('result').style.display='block'; $('result').textContent='✨ Looking at the photos with Sonnet… (a few seconds)';
+  const btn=$('draft'); btn.disabled=true; $('result').style.display='block';
+  $('result').textContent='✨ Rewriting from your input, the photos and the model reference… (a few seconds)';
+  const payload={order:selected, model:$('f-model').value, model_link:$('f-link').value, ref:$('f-ref').value,
+    lang:$('f-lang').value, title:$('f-title').value, summary:$('f-summary').value,
+    story:$('f-story').value, location:$('f-location').value, quote:$('f-quote').value};
   try{
-    const r=await fetch('/api/draft',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({model:$('f-model').value,order:selected})});
+    const r=await fetch('/api/draft',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
     const d=await r.json();
-    if(!r.ok||!d.ok)throw new Error(d.error||'draft failed');
-    const dr=d.draft, setIfEmpty=(id,v)=>{const el=$(id); if(v&&!el.value.trim())el.value=v;};
-    setIfEmpty('f-title',dr.title); setIfEmpty('f-summary',dr.summary); setIfEmpty('f-story',dr.story);
-    setIfEmpty('f-location',dr.location); setIfEmpty('f-quote',dr.quote);
+    if(!r.ok||!d.ok)throw new Error(d.error||'rewrite failed');
+    const dr=d.draft, set=(id,v)=>{ if(v!=null&&String(v).trim()!=='') $(id).value=v; };  // overwrite with rewritten text
+    set('f-title',dr.title); set('f-summary',dr.summary); set('f-story',dr.story); set('f-location',dr.location); set('f-quote',dr.quote);
     if($('f-model').value.trim()&&!$('f-quoteby').value.trim())$('f-quoteby').value=$('f-model').value.trim();
-    $('result').innerHTML=`✨ Draft filled from ${d.images} photo(s) (~$${(d.cost||0).toFixed(3)}). Review &amp; edit — the quote is a placeholder for <b>${$('f-model').value||'the model'}</b>'s own words. Empty fields only were filled.`;
+    $('result').innerHTML=`✨ Rewritten from ${d.images} photo(s) (~$${(d.cost||0).toFixed(3)}). Review &amp; edit — the quote stays a placeholder for <b>${$('f-model').value||'the model'}</b>'s real words unless you supplied one.`;
   }catch(err){$('result').textContent='✗ '+err.message;}
-  $('draft').disabled=false;
+  btn.disabled=false;
 };
 $('publish').onclick=async()=>{
   if(!selected.length)return alert('Select at least one photo.');
