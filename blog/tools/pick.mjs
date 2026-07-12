@@ -40,6 +40,10 @@ const positional = args.filter((a, i) => !a.startsWith('--') && !(i > 0 && args[
 const FOLDER = positional[0] ? resolve(positional[0]) : null;
 const MODEL_DEFAULT = opt('model', '');
 const PORT = Number(opt('port', '8150'));
+// AI "Draft with AI" is OFF by default so it never spawns the paid model
+// unless explicitly enabled with --ai (its ~$0.04/photo counts against whatever
+// your local `claude` CLI is authenticated with).
+const AI_DRAFT = args.includes('--ai');
 
 if (!FOLDER || !existsSync(FOLDER) || !statSync(FOLDER).isDirectory()) {
   console.error(`\nUsage: node blog/tools/pick.mjs "<shoot-folder>" [--model <name>] [--port 8150]`);
@@ -188,7 +192,7 @@ const server = createServer((req, res) => {
     return send(res, 200, readFileSync(join(__dirname, 'picker.html'), 'utf8'), 'text/html; charset=utf-8');
   }
   if (url.pathname === '/api/config') {
-    return send(res, 200, JSON.stringify({ folder: FOLDER, model: MODEL_DEFAULT, images: listImages() }));
+    return send(res, 200, JSON.stringify({ folder: FOLDER, model: MODEL_DEFAULT, images: listImages(), aiDraft: AI_DRAFT }));
   }
   if (url.pathname === '/thumb') {
     const name = url.searchParams.get('f') || '';
@@ -198,6 +202,7 @@ const server = createServer((req, res) => {
     return send(res, 200, readFileSync(p), MIME[extname(safe).toLowerCase()] || 'application/octet-stream');
   }
   if (url.pathname === '/api/draft' && req.method === 'POST') {
+    if (!AI_DRAFT) return send(res, 403, JSON.stringify({ error: 'AI draft is disabled. Relaunch with --ai to enable it.' }));
     let body = '';
     req.on('data', (c) => (body += c));
     req.on('end', () => {
@@ -251,5 +256,6 @@ const server = createServer((req, res) => {
 server.listen(PORT, '127.0.0.1', () => {
   console.log(`\n  Photo picker ready:  http://127.0.0.1:${PORT}`);
   console.log(`  Folder: ${FOLDER}`);
-  console.log(`  ${listImages().length} images. Ctrl+C to stop.\n`);
+  console.log(`  ${listImages().length} images.`);
+  console.log(`  AI draft: ${AI_DRAFT ? 'ON (uses your claude CLI, ~$0.04/photo)' : 'off — add --ai to enable'}. Ctrl+C to stop.\n`);
 });

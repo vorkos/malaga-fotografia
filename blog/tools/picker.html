@@ -58,6 +58,7 @@ const $=(id)=>document.getElementById(id);
 
 fetch('/api/config').then(r=>r.json()).then(cfg=>{
   images=cfg.images; $('folder').textContent='· '+cfg.folder+' ('+images.length+')';
+  if(!cfg.aiDraft){ const b=$('draft'); if(b) b.remove(); }  // off unless launched with --ai
   if(cfg.model) $('f-model').value=cfg.model;
   $('f-date').value=new Date().toISOString().slice(0,10);
   render();
