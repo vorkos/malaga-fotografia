@@ -8,7 +8,10 @@
   },
   "assets": {
     "directory": ".",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+    // Without this, requests matching a static asset are served before
+    // _worker.js runs, so the canonical host/scheme redirect never fires.
+    "run_worker_first": true
   },
   "compatibility_flags": [
     "nodejs_compat"

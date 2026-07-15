@@ -15,6 +15,12 @@ export default {
       return Response.redirect(url.toString(), 301);
     }
 
+    // Legacy pricing URL (pre-2026-06-18 nav link) still indexed by Google.
+    if (url.pathname === '/price') {
+      url.pathname = '/prices';
+      return Response.redirect(url.toString(), 301);
+    }
+
     if (url.pathname.startsWith('/gallery/')) {
       const key = url.pathname.slice(1); // strip leading /
       const obj = await env.PHOTOS.get(key);
