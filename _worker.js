@@ -2,6 +2,19 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    // Canonical host+scheme: everything on the custom domain lives at
+    // https://malaga-fotografia.com — www and plain-http variants 301 here,
+    // otherwise Google flags them as duplicate pages. workers.dev is left
+    // alone as a dev/test entry point.
+    if (
+      url.hostname === 'www.malaga-fotografia.com' ||
+      (url.hostname === 'malaga-fotografia.com' && url.protocol === 'http:')
+    ) {
+      url.protocol = 'https:';
+      url.hostname = 'malaga-fotografia.com';
+      return Response.redirect(url.toString(), 301);
+    }
+
     if (url.pathname.startsWith('/gallery/')) {
       const key = url.pathname.slice(1); // strip leading /
       const obj = await env.PHOTOS.get(key);
