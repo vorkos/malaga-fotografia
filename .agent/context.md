@@ -155,23 +155,37 @@ Rating tool was `rate.html` (served locally via `python3 -m http.server 8099`). 
 
 ## _worker.js
 
-```js
-export default {
-  async fetch(request, env) {
-    const url = new URL(request.url);
-    if (url.pathname.startsWith('/gallery/')) {
-      const key = url.pathname.slice(1);
-      const obj = await env.PHOTOS.get(key);
-      if (!obj) return new Response('Not found', { status: 404 });
-      const headers = new Headers();
-      obj.writeHttpMetadata(headers);
-      headers.set('cache-control', 'public, max-age=31536000, immutable');
-      return new Response(obj.body, { headers });
-    }
-    return env.ASSETS.fetch(request);
-  },
-};
-```
+Handles, in order:
+1. **Canonical redirect (added 2026-07-15):** www + plain-http → 301
+   `https://malaga-fotografia.com` (query preserved). workers.dev is left alone
+   as a dev entry point. Requires `"run_worker_first": true` in
+   `wrangler.jsonc` assets config — without it, asset-backed pages are served
+   BEFORE the worker runs and redirects never fire.
+2. **Legacy `/price` → 301 `/prices`** (old nav link Google still had; was the
+   GSC 404).
+3. `/gallery/*` → R2 `PHOTOS` (immutable cache headers).
+4. `POST /api/apply` → apply-form handler.
+5. Everything else → `env.ASSETS.fetch(request)`.
+
+Note: the assets layer serves **pretty URLs** — `/prices.html` 307s to
+`/prices`, `/blog/barbara` 307s to `/blog/barbara/`. Canonical URLs are the
+pretty forms.
+
+## SEO / Search Console (2026-07-15)
+
+- GSC report showed 2 "Duplicate without user-selected canonical" (www/http
+  variants served identical content with no redirects) + 1 404 (`/price`).
+  Fixed via the worker redirects above.
+- `sitemap.xml` (repo root, static asset): 6 URLs — `/`, `/prices`, `/blog/`,
+  both Barbara posts, `/apply/`. **Add new blog posts to it when publishing.**
+- `robots.txt` (repo root): just the `Sitemap:` pointer. Cloudflare's managed
+  robots.txt (AI-bot content signals) is prepended automatically at the edge.
+- `prices.html` got a real `<title>` (was "Bundled Page") + canonical
+  `https://malaga-fotografia.com/prices` in the outer head.
+- Zone-level settings (Always Use HTTPS etc.) were NOT changed — the Cloudflare
+  MCP token can read but not write zone settings/rulesets; worker-level
+  redirects cover it.
+- Still to do in GSC (manual): submit sitemap.xml, Validate Fix on both issues.
 
 ---
 
