@@ -1,0 +1,94 @@
+/**
+ * tokens.css — the shared Málaga Fotografía design system.
+ *
+ * ONE canonical token layer for both products (public site + proofing app).
+ * Keep this file byte-identical across repos; it is the single source of truth
+ * for colour, type, spacing, radii, elevation and motion. Components and page
+ * styles must consume these variables rather than re-declaring hex/px values.
+ *
+ * Brand: warm near-black canvas, cream text, gold accent, Cormorant Garamond
+ * (display) + Archivo (UI). Dark-first — a dark surround lets photography carry
+ * the colour.
+ */
+:root {
+  color-scheme: dark;
+
+  /* — Ink ramp (backgrounds, deepest → lifted) — */
+  --ink-900: #0a0908; /* wells / lightbox */
+  --ink-850: #0c0b0a; /* public canvas */
+  --ink-800: #141210; /* surface */
+  --ink-700: #1e1a15; /* raised panel / header */
+  --ink-600: #26211b; /* hover / active surface */
+
+  /* — Cream / taupe (text, brightest → dim) — */
+  --cream-hi: #f3eee5; /* display headings */
+  --cream: #ece6dc; /* primary text */
+  --taupe-lit: #bcb3a6; /* secondary text — ~8:1, passes AAA on every surface */
+  --taupe: #a59c91; /* large/decorative text ONLY (borderline for small text) */
+
+  /* — Gold — */
+  --gold: #d8a24a; /* accent; OK as small text (~8.6:1 on ink) */
+  --gold-hi: #e7bd73; /* single canonical hover/active gold */
+  --gold-ink: #17130a; /* text ON gold fills */
+
+  /* — Semantic (proofing pick/reject; readable as text) — */
+  --pick: #86c98a;
+  --reject: #e0796f;
+
+  /* — Lines: cream by default; gold reserved for focus/active state — */
+  --line: rgba(236, 230, 220, 0.12);
+  --line-strong: rgba(236, 230, 220, 0.22);
+  --line-gold: rgba(216, 162, 74, 0.32);
+
+  /* — Focus ring: one ring everywhere — */
+  --focus-ring: 0 0 0 2px rgba(216, 162, 74, 0.55);
+
+  /* — Spacing (4px base) — */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+  --s-10: 140px;
+
+  /* — Type — */
+  --font-head: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Archivo', system-ui, sans-serif;
+  --t-caption: 0.75rem; /* eyebrows/labels — pair with uppercase + 0.12em */
+  --t-ui-sm: 0.85rem; /* meta, tables, filters */
+  --t-body: 1.05rem; /* prose */
+  --t-lead: 1.2rem; /* italic Cormorant deks/leads */
+  --t-h3: clamp(1.4rem, 2.5vw, 1.75rem);
+  --t-h2: clamp(2rem, 5vw, 3.6rem);
+  --t-display: clamp(2.6rem, 8vw, 5rem);
+  --tracking-label: 0.12em; /* one nav/label tracking value */
+
+  /* — Radii — */
+  --r-sm: 3px; /* image corners */
+  --r-md: 6px; /* buttons, inputs, cards */
+  --r-lg: 10px; /* panels, modals */
+  --r-pill: 999px; /* chips / toggles only */
+
+  /* — Elevation (dark UI lifts by surface + hairline, not drop shadow) — */
+  --e-1: none;
+  --e-2: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --e-3: 0 8px 40px rgba(0, 0, 0, 0.6);
+
+  /* — Motion — */
+  --dur-fast: 0.15s;
+  --dur: 0.25s;
+  --dur-slow: 0.5s;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0s;
+    --dur: 0s;
+    --dur-slow: 0s;
+  }
+}

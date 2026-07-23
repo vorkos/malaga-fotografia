@@ -1,20 +1,51 @@
 /* Málaga Fotografía — Journal styles.
-   Mobile-first. Brand tokens mirror the main site: near-black bg, warm
-   off-white text, gold accent; Cormorant Garamond headings + Archivo body. */
+   Mobile-first. Brand tokens now come from the shared design system
+   (tokens.css); the names below are thin aliases so existing rules keep
+   working while the whole brand can no longer drift between products. */
+
+@import url('tokens.css');
 
 :root {
-  --bg: #0c0b0a;
-  --surface: #141210;
-  --text: #ece6dc;
-  --text-dim: #a49b8d;
-  --gold: #d8a24a;
-  --gold-hi: #e7bd73;
-  --border: rgba(216, 162, 74, 0.22);
+  --bg: var(--ink-850);
+  --surface: var(--ink-800);
+  --text: var(--cream);
+  --text-dim: var(--taupe-lit); /* raised from #a49b8d, which failed 4.5:1 */
+  /* --gold / --gold-hi come straight from tokens.css */
+  --border: var(--line); /* cream hairline; gold now reserved for focus/active */
   --maxw: 760px;
-  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
+
+/* --- accessibility baseline (shared across the brand) --- */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--r-sm);
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--s-2);
+  top: -3rem;
+  z-index: 100;
+  padding: var(--s-2) var(--s-4);
+  background: var(--ink-700);
+  color: var(--cream);
+  border: 1px solid var(--line-gold);
+  border-radius: var(--r-md);
+  transition: top var(--dur-fast) var(--ease);
+}
+.skip-link:focus { top: var(--s-2); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 
 html { -webkit-text-size-adjust: 100%; }
 
@@ -53,9 +84,54 @@ img { max-width: 100%; display: block; }
   letter-spacing: 0.02em;
   color: var(--text);
 }
-.site-head__nav { display: flex; gap: 1.1rem; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em; }
-.site-head__nav a { color: var(--text-dim); }
+.site-head__nav { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; font-size: 0.78rem; text-transform: uppercase; letter-spacing: var(--tracking-label); }
+.site-head__nav a { color: var(--text-dim); transition: color var(--dur-fast) var(--ease); }
+.site-head__nav a:hover { color: var(--gold); text-decoration: none; }
 .site-head__nav a[aria-current='page'] { color: var(--gold-hi); }
+
+/* --- shared chrome: header actions, Apply CTA, language toggle --- */
+.site-head__actions { display: flex; align-items: center; gap: 0.75rem; }
+.site-head__apply { min-height: 34px; padding: 0.4rem 1rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: var(--tracking-label); }
+
+.langtoggle { display: flex; gap: 4px; }
+.langtoggle__btn {
+  font: 600 0.72rem/1 var(--font-body);
+  letter-spacing: 0.1em;
+  padding: 6px 10px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--text-dim);
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.langtoggle__btn:hover { color: var(--gold); }
+/* active-language button reflects <html lang> — no JS class needed */
+html[lang='en'] .langtoggle__btn[data-set-lang='en'],
+html[lang='es'] .langtoggle__btn[data-set-lang='es'] {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--gold-ink);
+}
+
+/* --- button variants (shared with the proofing app's components.css) --- */
+.btn--primary { background: var(--gold); color: var(--gold-ink); border: 1px solid var(--gold); }
+.btn--primary:hover { background: var(--gold-hi); text-decoration: none; }
+.btn--secondary {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: var(--r-md);
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.btn--secondary:hover { background: var(--gold); color: var(--gold-ink); text-decoration: none; }
+
+/* --- bilingual: show only the active language (set on <html lang>) --- */
+html[lang='en'] [data-lang='es'], html[lang='es'] [data-lang='en'] { display: none; }
 
 .site-foot {
   margin-top: 4rem;
@@ -63,8 +139,14 @@ img { max-width: 100%; display: block; }
   border-top: 1px solid var(--border);
   color: var(--text-dim);
   font-size: 0.85rem;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem 1.5rem;
+  flex-wrap: wrap;
 }
+.site-foot__brand { font-family: var(--font-head); font-size: 1rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--taupe-lit); }
+@media (max-width: 560px) { .site-foot { justify-content: center; text-align: center; } }
 
 /* --- journal index --- */
 .journal { max-width: 1100px; margin: 0 auto; padding: clamp(2rem, 6vw, 4rem) clamp(1rem, 5vw, 2rem); }

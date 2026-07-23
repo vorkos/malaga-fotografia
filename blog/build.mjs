@@ -21,6 +21,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import matter from 'gray-matter';
 import MarkdownIt from 'markdown-it';
+import { siteHeader, siteFooter } from './lib/chrome.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CONTENT_DIR = join(__dirname, 'content');
@@ -152,14 +153,12 @@ function renderPost(post) {
   <meta name="twitter:card" content="summary_large_image">
   ${HEAD_FONTS}
   <link rel="stylesheet" href="/blog/assets/blog.css">
+  <script src="/blog/assets/chrome.js" defer></script>
 </head>
 <body>
-  <header class="site-head">
-    <a class="site-head__brand" href="/">${BRAND}</a>
-    <nav class="site-head__nav"><a href="/blog/">${lang === 'es' ? 'Diario' : 'Journal'}</a><a href="/apply/">${lang === 'es' ? 'Colaborar' : 'Collaborate'}</a></nav>
-  </header>
+${siteHeader('journal')}
 
-  <main class="post">
+  <main class="post" id="main">
     <article>
       <p class="post__eyebrow">${esc(data.location ?? '')}${data.location && data.date ? ' · ' : ''}${esc(fmtDate(data.date, lang))}</p>
       <h1 class="post__title">${esc(title)}</h1>
@@ -179,9 +178,7 @@ function renderPost(post) {
     <p class="post__back"><a href="/blog/">← ${lang === 'es' ? 'Todas las historias' : 'All stories'}</a></p>
   </main>
 
-  <footer class="site-foot">
-    <p>${BRAND} · Málaga, España</p>
-  </footer>
+${siteFooter()}
   <script src="/blog/assets/carousel.js" defer></script>
 </body>
 </html>`;
@@ -218,14 +215,12 @@ function renderIndex(posts) {
   ${posts[0] && (posts[0].data.cover ?? posts[0].data.images?.[0]) ? `<meta property="og:image" content="${esc(absUrl(posts[0].data.cover ?? posts[0].data.images[0]))}">` : ''}
   ${HEAD_FONTS}
   <link rel="stylesheet" href="/blog/assets/blog.css">
+  <script src="/blog/assets/chrome.js" defer></script>
 </head>
 <body>
-  <header class="site-head">
-    <a class="site-head__brand" href="/">${BRAND}</a>
-    <nav class="site-head__nav"><a href="/blog/" aria-current="page">Journal</a><a href="/apply/">Collaborate</a></nav>
-  </header>
+${siteHeader('journal')}
 
-  <main class="journal">
+  <main class="journal" id="main">
     <header class="journal__head">
       <h1>The Journal</h1>
       <p>Stories from the shoots — the people, the places, and what we made together.</p>
@@ -233,9 +228,7 @@ function renderIndex(posts) {
     ${posts.length ? `<div class="journal__grid">\n${cards}\n    </div>` : '<p class="journal__empty">First stories coming soon.</p>'}
   </main>
 
-  <footer class="site-foot">
-    <p>${BRAND} · Málaga, España</p>
-  </footer>
+${siteFooter()}
 </body>
 </html>`;
 }

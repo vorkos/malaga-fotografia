@@ -15,5 +15,7 @@ node_modules
 package.json
 package-lock.json
 blog/build.mjs
+blog/build-site.mjs
+blog/lib
 blog/content
 blog/tools

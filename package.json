@@ -4,6 +4,8 @@
   "type": "module",
   "scripts": {
     "build:blog": "node blog/build.mjs",
+    "build:site": "node blog/build-site.mjs",
+    "build": "node blog/build-site.mjs && node blog/build.mjs",
     "pick": "node blog/tools/pick.mjs"
   },
   "devDependencies": {

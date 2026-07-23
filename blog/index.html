@@ -16,14 +16,23 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/blog/assets/blog.css">
+  <script src="/blog/assets/chrome.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#main"><span data-lang="en">Skip to content</span><span data-lang="es">Saltar al contenido</span></a>
   <header class="site-head">
     <a class="site-head__brand" href="/">Málaga Fotografía</a>
-    <nav class="site-head__nav"><a href="/blog/" aria-current="page">Journal</a><a href="/apply/">Collaborate</a></nav>
+    <nav class="site-head__nav" aria-label="Málaga Fotografía"><a href="/#portfolio"><span data-lang="en">Portfolio</span><span data-lang="es">Portfolio</span></a><a href="/blog/" aria-current="page"><span data-lang="en">Journal</span><span data-lang="es">Diario</span></a><a href="/#tfp"><span data-lang="en">Collaborate</span><span data-lang="es">Colaborar</span></a><a href="/#process"><span data-lang="en">Process</span><span data-lang="es">Proceso</span></a><a href="/prices.html"><span data-lang="en">Pricing</span><span data-lang="es">Precios</span></a><a href="/#contact"><span data-lang="en">Contact</span><span data-lang="es">Contacto</span></a></nav>
+    <div class="site-head__actions">
+      <a class="btn btn--primary site-head__apply" href="/apply/"><span data-lang="en">Apply</span><span data-lang="es">Aplicar</span></a>
+      <div class="langtoggle" role="group" aria-label="Language / Idioma">
+        <button type="button" class="langtoggle__btn" data-set-lang="es">ES</button>
+        <button type="button" class="langtoggle__btn" data-set-lang="en">EN</button>
+      </div>
+    </div>
   </header>
 
-  <main class="journal">
+  <main class="journal" id="main">
     <header class="journal__head">
       <h1>The Journal</h1>
       <p>Stories from the shoots — the people, the places, and what we made together.</p>
@@ -49,7 +58,9 @@
   </main>
 
   <footer class="site-foot">
-    <p>Málaga Fotografía · Málaga, España</p>
+    <span class="site-foot__brand">Málaga Fotografía</span>
+    <span><span data-lang="en">Confidential &amp; professional</span><span data-lang="es">Confidencial y profesional</span> · Málaga · 2026</span>
+    <a href="https://instagram.com/ph.kostiantyn.v" target="_blank" rel="noopener">@ph.kostiantyn.v</a>
   </footer>
 </body>
 </html>
