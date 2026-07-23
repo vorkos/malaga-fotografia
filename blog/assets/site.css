@@ -19,9 +19,10 @@
 
 /* --- the "Mat": signature framed-image container --- */
 .mat { border: 1px solid var(--line-strong); background: var(--ink-700); padding: 6px; border-radius: var(--r-md); }
-.mat > img { display: block; width: 100%; object-fit: cover; border-radius: var(--r-sm); }
-.mat--portrait > img { aspect-ratio: 4 / 5; }
-.mat--wide > img { aspect-ratio: 3 / 2; }
+.mat picture { display: block; }
+.mat img { display: block; width: 100%; object-fit: cover; border-radius: var(--r-sm); }
+.mat--portrait img { aspect-ratio: 4 / 5; }
+.mat--wide img { aspect-ratio: 3 / 2; }
 
 /* --- hero --- */
 .hero {
@@ -64,7 +65,7 @@
 .about__promise { border-left: 2px solid var(--gold); padding: 6px 0 6px 20px; }
 .about__promise p { font-size: 16px; line-height: 1.7; margin: 0; color: var(--taupe-lit); }
 .about__img { flex: 0 1 360px; min-width: 260px; }
-.about__img > img { aspect-ratio: 4 / 5; height: clamp(380px, 46vw, 520px); }
+.about__img img { aspect-ratio: 4 / 5; height: clamp(380px, 46vw, 520px); }
 
 /* --- portfolio gallery (curated grid, no auto-advance) --- */
 .gallery__head { max-width: 640px; margin-bottom: clamp(36px, 5vh, 56px); }
@@ -73,8 +74,8 @@
 .gallery__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(10px, 1.5vw, 16px); }
 @media (min-width: 720px) { .gallery__grid { grid-template-columns: repeat(4, 1fr); } }
 .gallery__item { display: block; margin: 0; padding: 0; border: 0; background: none; cursor: zoom-in; text-decoration: none; }
-.gallery__item .mat > img { transition: transform var(--dur-slow) var(--ease); }
-.gallery__item:hover .mat > img { transform: scale(1.03); }
+.gallery__item .mat img { transition: transform var(--dur-slow) var(--ease); }
+.gallery__item:hover .mat img { transform: scale(1.03); }
 .gallery__item--wide { grid-column: span 2; }
 
 /* --- tfp --- */

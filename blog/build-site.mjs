@@ -24,6 +24,13 @@ const ROOT = join(__dirname, '..'); // repo root — where index.html/prices.htm
 
 const G = (p) => `/gallery/${p}`; // R2 path helper
 
+/** <picture> with AVIF/WebP siblings + JPEG fallback (variants uploaded to R2
+ *  next to the .jpg by scratchpad/gen_variants.py). `path` is the .jpg key. */
+function pic(path, alt, loadingAttr = '') {
+  const base = path.replace(/\.jpg$/, '');
+  return `<picture><source type="image/avif" srcset="${G(base)}.avif"><source type="image/webp" srcset="${G(base)}.webp"><img src="${G(path)}"${loadingAttr} decoding="async" alt="${alt}"></picture>`;
+}
+
 function head({ title, desc, canonical, ogImage, extraHead = '' }) {
   return `<!DOCTYPE html>
 <html lang="es">
@@ -79,7 +86,7 @@ function galleryItem(path, kind, i) {
   const w = wide ? 1500 : 1200;
   const h = wide ? 1000 : 1500;
   return `        <a class="gallery__item${wide ? ' gallery__item--wide' : ''}" href="${G(path)}" data-pswp-width="${w}" data-pswp-height="${h}" target="_blank" rel="noopener">
-          <div class="mat mat--${wide ? 'wide' : 'portrait'}"><img src="${G(path)}"${eager} decoding="async" alt="${alt}"></div>
+          <div class="mat mat--${wide ? 'wide' : 'portrait'}">${pic(path, alt, eager)}</div>
         </a>`;
 }
 
@@ -251,7 +258,7 @@ ${siteHeader('portfolio')}
           <p class="about__lead">${T('introBody')}</p>
           <div class="about__promise"><p>${T('promise')}</p></div>
         </div>
-        <div class="about__img mat mat--portrait"><img src="${G('barbara/Z52_0569.jpg')}" decoding="async" alt="Retrato · Portrait · Málaga Fotografía"></div>
+        <div class="about__img mat mat--portrait">${pic('barbara/Z52_0569.jpg', 'Retrato · Portrait · Málaga Fotografía')}</div>
       </div>
     </section>
 
@@ -446,7 +453,7 @@ ${siteHeader('pricing')}
           <h1 class="display">${P('title')}</h1>
           <p class="price-hero__sub">${P('sub')}</p>
         </div>
-        <div class="price-hero__img mat mat--portrait"><img src="${G('barbara/Z52_0501.jpg')}" decoding="async" alt="Retrato boudoir · Boudoir portrait · Málaga"></div>
+        <div class="price-hero__img mat mat--portrait">${pic('barbara/Z52_0501.jpg', 'Retrato boudoir · Boudoir portrait · Málaga')}</div>
       </div>
     </section>
 
