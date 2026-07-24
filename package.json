@@ -6,7 +6,8 @@
     "build:blog": "node blog/build.mjs",
     "build:site": "node blog/build-site.mjs",
     "build": "node blog/build-site.mjs && node blog/build.mjs",
-    "pick": "node blog/tools/pick.mjs"
+    "pick": "node blog/tools/pick.mjs",
+    "variants": "python blog/tools/gen-variants.py"
   },
   "devDependencies": {
     "gray-matter": "^4.0.3",
