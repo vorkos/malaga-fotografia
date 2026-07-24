@@ -31,6 +31,43 @@ export default {
       return new Response(obj.body, { headers });
     }
 
+    // Photo listing for the R2 blog-post picker (blog/tools/pick-r2.mjs).
+    // Token-gated: R2 holds ALL uploaded selects, not just the curated public
+    // subset shown on the site, so the filename list must not be openly
+    // enumerable. Set with `wrangler secret put LIST_TOKEN`.
+    if (url.pathname.startsWith('/api/photos/')) {
+      const auth = request.headers.get('authorization');
+      if (!env.LIST_TOKEN || auth !== `Bearer ${env.LIST_TOKEN}`) {
+        return json({ error: 'unauthorized' }, 401);
+      }
+      if (url.pathname === '/api/photos/models') {
+        const out = await env.PHOTOS.list({ prefix: 'gallery/', delimiter: '/' });
+        const models = (out.delimitedPrefixes || [])
+          .map((p) => p.slice('gallery/'.length).replace(/\/$/, ''))
+          .filter(Boolean)
+          .sort();
+        return json({ models });
+      }
+      if (url.pathname === '/api/photos/by-model') {
+        const model = url.searchParams.get('model') || '';
+        if (!/^[a-zA-Z0-9._-]+$/.test(model)) return json({ error: 'bad model' }, 400);
+        const prefix = `gallery/${model}/`;
+        const photos = [];
+        let cursor;
+        do {
+          const out = await env.PHOTOS.list({ prefix, cursor, limit: 1000 });
+          for (const o of out.objects) {
+            // source images only — skip the .avif/.webp variants
+            if (/\.(jpe?g|png)$/i.test(o.key)) photos.push({ key: o.key, url: '/' + o.key });
+          }
+          cursor = out.truncated ? out.cursor : undefined;
+        } while (cursor);
+        photos.sort((a, b) => a.key.localeCompare(b.key));
+        return json({ model, photos });
+      }
+      return json({ error: 'not_found' }, 404);
+    }
+
     // TFP application intake (see /apply/). Stores to R2; optionally emails.
     if (url.pathname === '/api/apply' && request.method === 'POST') {
       return handleApply(request, env);

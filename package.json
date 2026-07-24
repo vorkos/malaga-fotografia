@@ -7,6 +7,8 @@
     "build:site": "node blog/build-site.mjs",
     "build": "node blog/build-site.mjs && node blog/build.mjs",
     "pick": "node blog/tools/pick.mjs",
+    "pick-r2": "node blog/tools/pick-r2.mjs",
+    "models": "node blog/tools/pick-r2.mjs --list",
     "variants": "python blog/tools/gen-variants.py"
   },
   "devDependencies": {
