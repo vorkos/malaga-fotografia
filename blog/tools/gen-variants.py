@@ -22,6 +22,10 @@ REPO = Path(__file__).resolve().parents[2]  # malaga-fotografia/
 SITE = "https://malaga-fotografia.com"
 BUCKET = "photos"
 DRY = "--dry-run" in sys.argv
+# Swapping one photo into the grid should not re-upload the other eighteen.
+# `--only Z52_9416` narrows the run to keys containing that substring.
+ONLY = next((a.split("=", 1)[1] if "=" in a else sys.argv[sys.argv.index(a) + 1]
+             for a in sys.argv if a.startswith("--only")), None)
 
 
 def displayed_keys() -> list[str]:
@@ -30,6 +34,8 @@ def displayed_keys() -> list[str]:
         html = (REPO / f).read_text(encoding="utf-8")
         for m in re.finditer(r'src="(/gallery/[A-Za-z0-9._/-]+\.jpg)"', html):
             keys.add(m.group(1).lstrip("/"))
+    if ONLY:
+        keys = {k for k in keys if ONLY in k}
     return sorted(keys)
 
 

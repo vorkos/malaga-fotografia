@@ -38,7 +38,7 @@
 .hero::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, transparent 60%, rgba(12, 11, 10, 0.9) 100%); }
 .hero__inner { position: relative; max-width: 920px; }
 .hero h1 { font-size: var(--t-display); margin: 0 0 28px; }
-.hero__sub { font-size: clamp(16px, 1.5vw, 20px); line-height: 1.65; max-width: 600px; margin: 0 0 40px; color: #c2b9ad; }
+.hero__sub { font-size: clamp(16px, 1.5vw, 20px); line-height: 1.65; max-width: 600px; margin: 0 0 40px; color: var(--taupe-lit); }
 .hero__cta { display: flex; gap: 14px; flex-wrap: wrap; }
 
 /* --- pill buttons used across the page body (distinct from header .btn) --- */
@@ -80,14 +80,14 @@
 
 /* --- tfp --- */
 .tfp h2 { font-size: clamp(36px, 6vw, 72px); margin: 0 0 22px; }
-.tfp__intro { font-size: clamp(16px, 1.4vw, 19px); line-height: 1.7; max-width: 680px; margin: 0 0 clamp(40px, 6vh, 64px); color: #c2b9ad; }
+.tfp__intro { font-size: clamp(16px, 1.4vw, 19px); line-height: 1.7; max-width: 680px; margin: 0 0 clamp(40px, 6vh, 64px); color: var(--taupe-lit); }
 .tfp__cards { display: flex; gap: clamp(24px, 4vw, 48px); flex-wrap: wrap; }
 .tfp__card { flex: 1 1 320px; min-width: 280px; background: var(--ink-700); border: 1px solid var(--line); border-radius: var(--r-md); padding: clamp(26px, 3vw, 36px); }
 .tfp__card h3 { font-family: var(--font-head); font-weight: 500; font-size: 26px; margin: 0 0 22px; color: var(--gold); }
 .pointlist { display: flex; flex-direction: column; gap: 16px; }
 .point { display: flex; gap: 14px; align-items: flex-start; }
 .point::before { content: ''; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin-top: 8px; }
-.point span { font-size: 16px; line-height: 1.55; color: #c2b9ad; }
+.point span { font-size: 16px; line-height: 1.55; color: var(--taupe-lit); }
 .tfp__cta { margin-top: clamp(40px, 6vh, 56px); display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
 .tfp__cta p { margin: 0; color: var(--taupe-lit); font-size: 15px; }
 
@@ -104,17 +104,23 @@
 .contact { text-align: center; background: radial-gradient(110% 90% at 50% 120%, rgba(216, 162, 74, 0.12), transparent 60%), var(--ink-850); }
 .contact__inner { max-width: 680px; margin: 0 auto; }
 .contact h2 { font-size: clamp(40px, 7vw, 80px); margin: 0 0 18px; }
-.contact__sub { font-size: 18px; line-height: 1.6; margin: 0 0 40px; color: #c2b9ad; }
+.contact__sub { font-size: 18px; line-height: 1.6; margin: 0 0 40px; color: var(--taupe-lit); }
 .contact__actions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
 .contact__note { font-size: 14px; line-height: 1.6; margin: 36px 0 0; color: var(--taupe); }
-.contact__note a { border-bottom: 1px solid rgba(216, 162, 74, 0.4); }
+/* These links carry their own gold rule, so the global `a:hover{underline}`
+   has to be switched off — otherwise hovering draws two parallel lines. The
+   rule brightens instead. (Nav links and pills already did this.) */
+.contact__note a,
+.tfpnote a { border-bottom: 1px solid var(--line-gold); }
+.contact__note a:hover,
+.tfpnote a:hover { text-decoration: none; border-bottom-color: var(--gold); }
 
 /* --- prices --- */
 .price-hero { position: relative; padding: clamp(130px, 18vh, 190px) clamp(20px, 8vw, 120px) clamp(50px, 7vh, 80px); overflow: hidden; background: radial-gradient(120% 90% at 50% -10%, rgba(216, 162, 74, 0.12) 0%, rgba(216, 162, 74, 0.03) 38%, transparent 64%), var(--ink-850); }
 .price-hero__row { max-width: 1180px; margin: 0 auto; display: flex; gap: clamp(40px, 6vw, 80px); flex-wrap: wrap; align-items: center; }
 .price-hero__text { flex: 1 1 460px; min-width: 300px; }
 .price-hero h1 { font-size: clamp(40px, 6.5vw, 82px); margin: 0 0 24px; }
-.price-hero__sub { font-size: clamp(16px, 1.5vw, 20px); line-height: 1.65; max-width: 540px; margin: 0; color: #c2b9ad; }
+.price-hero__sub { font-size: clamp(16px, 1.5vw, 20px); line-height: 1.65; max-width: 540px; margin: 0; color: var(--taupe-lit); }
 .price-hero__img { flex: 0 1 340px; min-width: 240px; }
 
 .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(18px, 2.4vw, 28px); align-items: stretch; }
@@ -134,10 +140,11 @@
 .pricecol { flex: 1 1 360px; min-width: 280px; }
 .pricecol h2 { font-size: clamp(28px, 4vw, 44px); line-height: 1.08; margin: 0 0 26px; }
 .addon { display: flex; justify-content: space-between; gap: 18px; align-items: baseline; padding: 15px 0; border-bottom: 1px solid var(--line); }
-.addon span { font-size: 16px; line-height: 1.4; color: #c2b9ad; }
+.addon:last-child { border-bottom: 0; } /* no rule under the last row — it closed a list that had already ended */
+.addon span { font-size: 16px; line-height: 1.4; color: var(--taupe-lit); }
 .addon b { flex: none; font-family: var(--font-head); font-weight: 400; font-size: 21px; color: var(--gold); }
 
 .tfpnote { max-width: 900px; margin: 0 auto; border-left: 2px solid var(--gold); padding: 8px 0 8px 26px; }
 .tfpnote__head { font-family: var(--font-head); font-weight: 400; font-size: clamp(22px, 2.6vw, 32px); line-height: 1.4; margin: 0 0 14px; color: var(--cream); text-wrap: pretty; }
 .tfpnote p { font-size: 16px; line-height: 1.65; margin: 0; color: var(--taupe-lit); }
-.tfpnote a { border-bottom: 1px solid rgba(216, 162, 74, 0.4); }
+/* .tfpnote a is styled with .contact__note a above — same treatment, one rule. */

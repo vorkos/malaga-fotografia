@@ -14,9 +14,8 @@
   <meta property="og:url" content="https://malaga-fotografia.com/apply/">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="preload" href="/blog/assets/fonts/cormorant-garamond-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/blog/assets/fonts/archivo-400-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/blog/assets/blog.css">
   <script>(function(){try{var l=localStorage.getItem('mf_lang');if(!l){l=(navigator.language||'es').toLowerCase().indexOf('en')===0?'en':'es';}document.documentElement.lang=l;}catch(e){document.documentElement.lang='es';}})();</script>
   <script src="/blog/assets/chrome.js" defer></script>
@@ -31,8 +30,8 @@
     .trust{display:flex;flex-wrap:wrap;gap:.45rem .6rem;margin:0 0 2rem;padding:0;list-style:none}
     .trust li{display:flex;align-items:center;gap:.4rem;font-size:.78rem;color:var(--text-dim);border:1px solid var(--border);border-radius:var(--r-pill);padding:.32rem .75rem}
     .trust li::before{content:'';flex:none;width:6px;height:6px;border-radius:50%;background:var(--gold)}
-    .field__error{font-size:.8rem;color:var(--pp-reject);min-height:1em}
-    input[aria-invalid=true],textarea[aria-invalid=true],select[aria-invalid=true]{border-color:var(--pp-reject)}
+    .field__error{font-size:.8rem;color:var(--reject);min-height:1em}
+    input[aria-invalid=true],textarea[aria-invalid=true],select[aria-invalid=true]{border-color:var(--reject)}
     .microcopy{font-size:.85rem;color:var(--text-dim);margin:0}
     .apply h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:1.7rem;margin:2.4rem 0 .8rem}
     .apply ul{padding-left:1.1rem;margin:0 0 1rem}
@@ -50,26 +49,38 @@
     .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
     .actions{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-top:.5rem}
     .msg{font-size:.95rem}
-    .msg--err{color:var(--pp-reject,#e0796f)}
+    .msg--err{color:var(--reject)}
     .ok{display:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:2rem;text-align:center}
+    .ok:focus{outline:none;box-shadow:var(--focus-ring)}
     .ok h2{margin-top:0}
     .fineprint{color:var(--text-dim);font-size:.82rem;margin-top:.5rem}
-    :root{--pp-reject:#e0796f}
+    /* --reject comes from tokens.css; this page used to redeclare it as
+       --pp-reject with the same hex, which is exactly how a token set drifts. */
   </style>
 </head>
 <body>
+  <!-- chrome:start — generated from blog/lib/chrome.mjs by `npm run build:apply`.
+       Everything between these markers is overwritten; edit chrome.mjs instead.
+       This page is hand-written apart from the chrome, and hand-syncing is what
+       let it drift to a different nav, a different font request and a stale
+       footer year. -->
   <a class="skip-link" href="#main"><span data-lang="en">Skip to content</span><span data-lang="es">Saltar al contenido</span></a>
   <header class="site-head">
     <a class="site-head__brand" href="/">Málaga Fotografía</a>
-    <nav class="site-head__nav" aria-label="Málaga Fotografía"><a href="/#portfolio"><span data-lang="en">Portfolio</span><span data-lang="es">Portfolio</span></a><a href="/blog/"><span data-lang="en">Journal</span><span data-lang="es">Diario</span></a><a href="/#tfp"><span data-lang="en">Collaborate</span><span data-lang="es">Colaborar</span></a><a href="/#process"><span data-lang="en">Process</span><span data-lang="es">Proceso</span></a><a href="/prices.html"><span data-lang="en">Pricing</span><span data-lang="es">Precios</span></a><a href="/#contact"><span data-lang="en">Contact</span><span data-lang="es">Contacto</span></a></nav>
-    <div class="site-head__actions">
-      <a class="btn btn--primary site-head__apply" href="/apply/"><span data-lang="en">Apply</span><span data-lang="es">Aplicar</span></a>
+    <div class="site-head__panel" id="site-menu">
+      <nav class="site-head__nav" aria-label="Málaga Fotografía"><a href="/#portfolio"><span data-lang="en">Portfolio</span><span data-lang="es">Portfolio</span></a><a href="/blog/"><span data-lang="en">Journal</span><span data-lang="es">Diario</span></a><a href="/#tfp"><span data-lang="en">Collaborate</span><span data-lang="es">Colaborar</span></a><a href="/#process"><span data-lang="en">Process</span><span data-lang="es">Proceso</span></a><a href="/prices"><span data-lang="en">Pricing</span><span data-lang="es">Precios</span></a><a href="/#contact"><span data-lang="en">Contact</span><span data-lang="es">Contacto</span></a></nav>
       <div class="langtoggle" role="group" aria-label="Language / Idioma">
-        <button type="button" class="langtoggle__btn" data-set-lang="es">ES</button>
-        <button type="button" class="langtoggle__btn" data-set-lang="en">EN</button>
+        <button type="button" class="langtoggle__btn" data-set-lang="es" aria-pressed="false">ES</button>
+        <button type="button" class="langtoggle__btn" data-set-lang="en" aria-pressed="false">EN</button>
       </div>
     </div>
+    <a class="btn btn--primary site-head__apply" href="/apply/"><span data-lang="en">Apply</span><span data-lang="es">Aplicar</span></a>
+    <button type="button" class="site-head__menu" aria-controls="site-menu" aria-expanded="false">
+      <span class="site-head__bars" aria-hidden="true"></span>
+      <span class="vh"><span data-lang="en">Menu</span><span data-lang="es">Menú</span></span>
+    </button>
   </header>
+  <!-- chrome:end -->
 
   <main class="apply" id="main">
     <p class="apply__eyebrow">Busco musas · Looking for muses</p>
@@ -113,7 +124,7 @@
       <div class="field">
         <label for="name"><span data-lang="en">Name or alias</span><span data-lang="es">Nombre o alias</span> <span class="req">*</span></label>
         <input type="text" id="name" name="name" maxlength="120" autocomplete="name" required aria-describedby="err-name">
-        <p class="field__error" id="err-name" role="alert" aria-live="polite"></p>
+        <p class="field__error" id="err-name" role="alert"></p>
       </div>
       <p class="microcopy"><span data-lang="en">Add an <strong>email or Instagram</strong> so I can reply — at least one.</span><span data-lang="es">Añade un <strong>email o Instagram</strong> para poder responderte — al menos uno.</span></p>
       <div class="field">
@@ -123,7 +134,7 @@
       <div class="field">
         <label for="instagram"><span data-lang="en">Instagram or portfolio link</span><span data-lang="es">Instagram o enlace a portfolio</span></label>
         <input type="text" id="instagram" name="instagram" maxlength="200" placeholder="@handle · https://…" aria-describedby="err-contact">
-        <p class="field__error" id="err-contact" role="alert" aria-live="polite"></p>
+        <p class="field__error" id="err-contact" role="alert"></p>
       </div>
       <div class="field">
         <label for="experience"><span data-lang="en">Modelling experience</span><span data-lang="es">Experiencia como modelo</span></label>
@@ -162,7 +173,7 @@
       <div class="consent">
         <label><input type="checkbox" id="consent" name="consent" required> <span data-lang="en">I'm happy for Málaga Fotografía to store this application and contact me about it.</span><span data-lang="es">Doy permiso a Málaga Fotografía para guardar esta solicitud y contactarme al respecto.</span> <span class="req">*</span></label>
       </div>
-      <p class="field__error" id="err-consent" role="alert" aria-live="polite"></p>
+      <p class="field__error" id="err-consent" role="alert"></p>
 
       <div class="actions">
         <button type="submit" class="btn btn--primary" id="submit"><span data-lang="en">Send application</span><span data-lang="es">Enviar solicitud</span></button>
@@ -172,17 +183,22 @@
       <p class="fineprint"><span data-lang="en">No payment is involved either way. Your details are used only to arrange a possible shoot; ask any time to have them deleted.</span><span data-lang="es">Sin pagos de ningún tipo. Tus datos se usan solo para organizar una posible sesión; pide que se borren cuando quieras.</span></p>
     </form>
 
-    <div class="ok" id="ok">
+    <!-- tabindex="-1" so the success message can take focus when it appears:
+         revealing it and scrolling to it left a screen-reader user's focus on
+         the form that had just been hidden, with nothing announced. -->
+    <div class="ok" id="ok" tabindex="-1" role="status">
       <h2><span data-lang="en">Thank you — got it.</span><span data-lang="es">Gracias — recibido.</span></h2>
       <p><span data-lang="en">I read every application personally and will reply within 48 hours. In the meantime, have a look through the <a href="/blog/">Journal</a> to get a feel for the work.</span><span data-lang="es">Leo cada solicitud en persona y responderé en 48 horas. Mientras tanto, echa un vistazo al <a href="/blog/">Diario</a> para conocer el trabajo.</span></p>
     </div>
   </main>
 
+  <!-- foot:start -->
   <footer class="site-foot">
     <span class="site-foot__brand">Málaga Fotografía</span>
     <span><span data-lang="en">Confidential &amp; professional</span><span data-lang="es">Confidencial y profesional</span> · Málaga · 2026</span>
     <a href="https://instagram.com/ph.kostiantyn.v" target="_blank" rel="noopener">@ph.kostiantyn.v</a>
   </footer>
+  <!-- foot:end -->
 
   <script>
     const form = document.getElementById('apply-form');
@@ -239,7 +255,11 @@
         if (!r.ok || !d.ok) throw new Error(d.error || t('generic'));
         form.style.display = 'none';
         el('ok').style.display = 'block';
-        el('ok').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Focus first, then scroll: focusing is what tells a screen reader the
+        // application went through. `block:'start'` lets the shared
+        // scroll-margin-top keep it clear of the sticky header.
+        el('ok').focus();
+        el('ok').scrollIntoView({ behavior: 'smooth', block: 'start' });
       } catch (err) {
         submit.disabled = false;
         msg.textContent = (err.message || t('generic')) + t('neterr');

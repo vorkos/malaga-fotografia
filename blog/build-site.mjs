@@ -29,13 +29,37 @@ const ROOT = join(__dirname, '..'); // repo root — where index.html/prices.htm
  *  `object-fit: cover` on the thumbnail and says nothing about the file. */
 const DIMS = JSON.parse(readFileSync(join(__dirname, 'gallery-dims.json'), 'utf8'));
 
+/** Narrow re-encodes that exist in R2, written by `python blog/tools/gen-thumbs.py`
+ *  AFTER a successful upload. Empty (or missing a photo) means "only the full
+ *  size is up there", and `pic()` falls back to today's single-source markup —
+ *  so the build can never advertise a width R2 hasn't got. */
+let THUMBS = {};
+try {
+  THUMBS = JSON.parse(readFileSync(join(__dirname, 'gallery-thumbs.json'), 'utf8'));
+} catch {
+  /* not generated yet — full-size only */
+}
+
 const G = (p) => `/gallery/${p}`; // R2 path helper
 
-/** <picture> with AVIF/WebP siblings + JPEG fallback (variants uploaded to R2
- *  next to the .jpg by scratchpad/gen_variants.py). `path` is the .jpg key. */
-function pic(path, alt, loadingAttr = '') {
+/**
+ * <picture> with AVIF/WebP siblings + JPEG fallback (variants uploaded to R2
+ * next to the .jpg by blog/tools/gen-variants.py). `path` is the .jpg key.
+ *
+ * `sizes` is what the photo actually occupies on screen. Without it every
+ * browser fetches the 1080px original — which the grid then paints into a
+ * 138px box on a phone, roughly sixty times the pixels it can show.
+ */
+function pic(path, alt, loadingAttr = '', sizes = '') {
   const base = path.replace(/\.jpg$/, '');
-  return `<picture><source type="image/avif" srcset="${G(base)}.avif"><source type="image/webp" srcset="${G(base)}.webp"><img src="${G(path)}"${loadingAttr} decoding="async" alt="${alt}"></picture>`;
+  const widths = THUMBS[path] || [];
+  const set = (ext) =>
+    widths.length
+      ? ` srcset="${[...widths.map((w) => `${G(base)}-w${w}.${ext} ${w}w`),
+                    `${G(base)}.${ext} ${DIMS[path] ? DIMS[path][0] : 1080}w`].join(', ')}"` +
+        (sizes ? ` sizes="${sizes}"` : '')
+      : ` srcset="${G(base)}.${ext}"`;
+  return `<picture><source type="image/avif"${set('avif')}><source type="image/webp"${set('webp')}><img src="${G(path)}"${loadingAttr} decoding="async" alt="${alt}"></picture>`;
 }
 
 function head({ title, desc, canonical, ogImage, extraHead = '' }) {
@@ -55,15 +79,70 @@ function head({ title, desc, canonical, ogImage, extraHead = '' }) {
 <meta property="og:image" content="${ogImage}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="preload" href="/blog/assets/fonts/cormorant-garamond-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/blog/assets/fonts/archivo-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/blog/assets/blog.css">
 <link rel="stylesheet" href="/blog/assets/site.css">
 ${extraHead}${LANG_BOOT}
 <script src="/blog/assets/chrome.js" defer></script>
 </head>
 <body>`;
+}
+
+/**
+ * What each photograph actually shows.
+ *
+ * Every gallery image used to carry the identical string "Fotografía de retrato
+ * de autor · Fine-art portrait · Málaga". The links have no text, so that alt IS
+ * the accessible name — a screen reader read the same sentence fourteen times
+ * and the grid was, to that listener, fourteen identical things.
+ *
+ * Written in both languages, `ES · EN`, matching how the rest of the site's
+ * plain attributes read; `bi()` can't help inside an attribute. Descriptions
+ * name the light, the setting and the pose — never the model. Who is in a frame
+ * is the model's to disclose (see .agent/models.md), and the grid is anonymous
+ * by design; the Journal is where names belong.
+ */
+const ALT = {
+  'mariia/Z52_0012-small.jpg':
+    'Desnudo artístico sentada en una ventana abierta, brazo alzado al marco, tejados al fondo · Fine-art nude seated in an open window, arm raised to the frame, rooftops beyond',
+  'lilly/Z52_0147-small.jpg':
+    'Desnudo artístico entre las ramas de un árbol, brazos en alto y hojas a contraluz · Fine-art nude in the fork of a tree, arms raised into backlit leaves',
+  'iryna/Z52_0598-small.jpg':
+    'Desnudo en blanco y negro, torso arqueado en contrapicado y trenza sobre el hombro · Black-and-white nude, arched torso from a low angle, braid over the shoulder',
+  'nataliia/Z52_9094-small.jpg':
+    'Desnudo de espaldas en un balcón, cabeza vuelta sobre el hombro, en tono sepia · Nude from behind on a balcony, head turned over the shoulder, warm sepia',
+  'mariia/Z52_0887-small.jpg':
+    'Retrato en penumbra junto a la ventana, mirada baja y sonrisa contenida · Soft window-light portrait, gaze lowered, a held smile',
+  'vika/Z52_1917-small.jpg':
+    'De rodillas sobre la cama quitándose una camiseta, vidriera y espejo al fondo · Kneeling on a bed lifting a white top overhead, stained glass and mirror behind',
+  'iryna/Z52_0537-small.jpg':
+    'Desnudo en blanco y negro junto a una puerta, mirada directa a cámara · High-contrast black-and-white nude beside a doorway, looking straight to camera',
+  'barbara/Z52_0470-small.jpg':
+    'Boudoir en vestido azul sobre la cama, luz roja de persiana y mano alzada · Boudoir in a blue slip on a bed, red blind-light, hand raised',
+  'nataliia/Z52_9385-small.jpg':
+    'Camisa blanca abierta sobre un sofá, pared en degradado rosa y azul · Open white shirt on a sofa against a pink-and-blue gradient wall',
+  'lilly/Z52_8323-small.jpg':
+    'Torso de perfil en primer plano, tatuaje floral y luz suave · Close profile of the torso, floral tattoo, soft light',
+  'vika/Z52_2867-small.jpg':
+    'Desnudo bañado en luz roja contra la pared, brazos tras la cabeza · Nude in deep red light against a wall, arms behind the head',
+  'mariia/Z52_9416-small.jpg':
+    'Sentada en la cama abrazándose las rodillas, plantas y luz natural de la ventana · Seated on a bed, arms wrapped round her knees, plants and natural window light',
+  'barbara/Z52_0383.jpg':
+    'Cenital sobre la cama en vestido azul, luz moteada en círculos · Overhead on a bed in a blue dress, dappled circles of light',
+  'barbara/Z52_0461.jpg':
+    'Tumbada en sábanas blancas con vestido azul, dentro de un círculo de luz · Lying on white sheets in a blue dress, inside a circle of light',
+  'barbara/Z52_0569.jpg':
+    'De pie junto a la persiana, sombras en franjas sobre el cuerpo · Standing by a blind, striped shadows across the body',
+  'barbara/Z52_0501.jpg':
+    'Luz roja en franjas sobre el cuerpo, de pie junto a la persiana · Red striped light across the body, standing by the blind',
+};
+
+/** Fail loudly rather than ship a photo described as "image". */
+function alt(path) {
+  const a = ALT[path];
+  if (!a) throw new Error(`no alt text for "${path}" — add it to ALT in build-site.mjs`);
+  return a;
 }
 
 // --- gallery pool (per-model R2 paths, real orientation buckets) ------------
@@ -79,15 +158,24 @@ const PORTRAITS = [
   ['nataliia/Z52_9385-small.jpg'],
   ['lilly/Z52_8323-small.jpg'],
   ['vika/Z52_2867-small.jpg'],
-  ['mariia/Z52_9264-small.jpg'],
+  // Z52_9264 sat here until 2026-07-26 and was landscape — the mat cropped a
+  // wide frame into a 4:5 slot, so the grid showed something the lightbox then
+  // contradicted. Z52_9416 keeps the job that frame did: the light, gentle note
+  // that closes the grid and balances the red-gel frames above it.
+  ['mariia/Z52_9416-small.jpg'],
 ].map(([p]) => p);
 const WIDES = ['barbara/Z52_0383.jpg', 'barbara/Z52_0461.jpg'];
 
+/** Grid geometry, told to the browser so it can pick a width: two columns below
+ *  720px, four above, inside a 1180px shell. A wide frame spans two of them. */
+const GRID_SIZES = '(min-width: 1240px) 280px, (min-width: 720px) 23vw, 46vw';
+const GRID_SIZES_WIDE = '(min-width: 1240px) 570px, (min-width: 720px) 47vw, 94vw';
+
 function galleryItem(path, kind, i) {
-  // alt is a plain attribute (no bilingual spans) — one descriptive line.
-  const alt = 'Fotografía de retrato de autor · Fine-art portrait · Málaga';
   const wide = kind === 'wide';
-  const eager = i < 2 ? '' : ' loading="lazy"';
+  // The desktop grid is four across, so the whole first row is above the fold;
+  // lazy-loading from the third image made two of them fade in after paint.
+  const eager = i < 4 ? '' : ' loading="lazy"';
   // <a> + data-pswp-* drives the PhotoSwipe lightbox (site.js); with JS off the
   // link just opens the image. These must be the FILE's real dimensions — the
   // mat's 4:5 is a CSS crop of the thumbnail only, and the lightbox shows the
@@ -109,7 +197,7 @@ function galleryItem(path, kind, i) {
       `PORTRAITS and WIDES, or swap it out.`);
   }
   return `        <a class="gallery__item${wide ? ' gallery__item--wide' : ''}" href="${G(path)}" data-pswp-width="${w}" data-pswp-height="${h}" target="_blank" rel="noopener">
-          <div class="mat mat--${wide ? 'wide' : 'portrait'}">${pic(path, alt, eager)}</div>
+          <div class="mat mat--${wide ? 'wide' : 'portrait'}">${pic(path, alt(path), eager, wide ? GRID_SIZES_WIDE : GRID_SIZES)}</div>
         </a>`;
 }
 
@@ -229,6 +317,25 @@ const HOME = {
   },
 };
 
+/**
+ * WhatsApp link with the first message already written.
+ *
+ * Every button used to point at the bare number, so each enquiry arrived as an
+ * unqualified "Hola" and whatever the click knew was thrown away.
+ *
+ * Two different jobs, so two different messages. The pricing tiers are the only
+ * place a paid booking is the goal, and there the message names the tier and
+ * price. Everywhere else the goal is a TFP collaborator, so the message says so
+ * and ends on a colon — an open line the sender keeps typing into, which is
+ * exactly the introduction that is wanted.
+ *
+ * Spanish: it is the site's default language and the market. The sender can
+ * edit it before sending.
+ */
+const WA_NUMBER = '34674474418';
+const wa = (text) => `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
+const WA_TFP = 'Hola Kostya, me gustaría colaborar contigo en una sesión TFP. Te cuento sobre mí:';
+
 const T = (field) => bi(HOME.en[field], HOME.es[field]);
 const eyebrow = (field, center = false) =>
   `<div class="eyebrow${center ? ' eyebrow--center' : ''}"><span class="eyebrow__label">${T(field)}</span></div>`;
@@ -281,7 +388,7 @@ ${siteHeader('portfolio')}
           <p class="about__lead">${T('introBody')}</p>
           <div class="about__promise"><p>${T('promise')}</p></div>
         </div>
-        <div class="about__img mat mat--portrait">${pic('barbara/Z52_0569.jpg', 'Retrato · Portrait · Málaga Fotografía')}</div>
+        <div class="about__img mat mat--portrait">${pic('barbara/Z52_0569.jpg', alt('barbara/Z52_0569.jpg'), '', '(min-width: 900px) 360px, 90vw')}</div>
       </div>
     </section>
 
@@ -341,10 +448,10 @@ ${steps}
         <p class="contact__sub">${T('contactSub')}</p>
         <div class="contact__actions">
           <a class="pill pill--primary" href="/apply/">${T('apply')}</a>
-          <a class="pill pill--ghost" href="https://wa.me/34674474418" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="pill pill--ghost" href="${wa(WA_TFP)}" target="_blank" rel="noopener">WhatsApp</a>
           <a class="pill pill--ghost" href="https://instagram.com/ph.kostiantyn.v" target="_blank" rel="noopener">Instagram</a>
         </div>
-        <p class="contact__note">${T('priceNote')} <a href="/prices.html">${T('priceLink')}</a></p>
+        <p class="contact__note">${T('priceNote')} <a href="/prices">${T('priceLink')}</a></p>
       </div>
     </section>
   </main>
@@ -387,9 +494,13 @@ const PRICES = {
     tfpHead: 'Prefer to collaborate at no cost?',
     tfpBody: "If we're after the same thing, we can work TFP — no money involved, we both receive the images.",
     tfpLink: 'See TFP collaborations',
-    ctaLabel: 'Booking',
-    ctaTitle: 'Ready for your session?',
-    ctaSub: "Message me and we'll design the perfect session for you together.",
+    // This closing CTA no longer sells a booking: the three tier buttons above
+    // already carry the paid message, and a TFP collaborator is the thing most
+    // wanted. So it opens a conversation and names both routes, and the heading
+    // no longer says "your session" over an ask to collaborate.
+    ctaLabel: 'Contact',
+    ctaTitle: 'Shall we talk?',
+    ctaSub: "Message me and we'll see what fits — a private session or a TFP collaboration.",
     back: 'View portfolio',
   },
   es: {
@@ -423,9 +534,9 @@ const PRICES = {
     tfpHead: '¿Prefieres colaborar sin coste?',
     tfpBody: 'Si buscamos lo mismo, podemos trabajar en modalidad TFP — sin dinero de por medio, ambos recibimos las imágenes.',
     tfpLink: 'Ver colaboraciones TFP',
-    ctaLabel: 'Reserva',
-    ctaTitle: '¿Lista para tu sesión?',
-    ctaSub: 'Escríbeme y diseñamos juntos la sesión perfecta para ti.',
+    ctaLabel: 'Contacto',
+    ctaTitle: '¿Hablamos?',
+    ctaSub: 'Escríbeme y vemos qué encaja — sesión privada o colaboración TFP.',
     back: 'Ver portfolio',
   },
 };
@@ -447,7 +558,7 @@ function renderPrices() {
           <div class="tier__features pointlist">
 ${features}
           </div>
-          <a class="pill pill--${tier.popular ? 'primary' : 'ghost'}" href="https://wa.me/34674474418" target="_blank" rel="noopener">${P('book')}</a>
+          <a class="pill pill--${tier.popular ? 'primary' : 'ghost'}" href="${wa(`Hola Kostya, me interesa la ${es.name} (${es.price}).`)}" target="_blank" rel="noopener">${P('book')}</a>
         </div>`;
     })
     .join('\n');
@@ -462,7 +573,7 @@ ${features}
   return `${head({
     title: 'Sesiones y tarifas — Málaga Fotografía',
     desc: 'Tarifas de sesiones de retrato y boudoir en Málaga desde 250€. Precios claros con galería privada editada. Portrait & boudoir session pricing in Málaga.',
-    canonical: SITE + '/prices.html',
+    canonical: SITE + '/prices',
     ogImage: SITE + G('barbara/Z52_0501.jpg'),
   })}
 ${siteHeader('pricing')}
@@ -476,7 +587,7 @@ ${siteHeader('pricing')}
           <h1 class="display">${P('title')}</h1>
           <p class="price-hero__sub">${P('sub')}</p>
         </div>
-        <div class="price-hero__img mat mat--portrait">${pic('barbara/Z52_0501.jpg', 'Retrato boudoir · Boudoir portrait · Málaga')}</div>
+        <div class="price-hero__img mat mat--portrait">${pic('barbara/Z52_0501.jpg', alt('barbara/Z52_0501.jpg'), '', '(min-width: 900px) 340px, 90vw')}</div>
       </div>
     </section>
 
@@ -524,7 +635,7 @@ ${addons}
         <h2 class="display">${P('ctaTitle')}</h2>
         <p class="contact__sub">${P('ctaSub')}</p>
         <div class="contact__actions">
-          <a class="pill pill--primary" href="https://wa.me/34674474418" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="pill pill--primary" href="${wa(WA_TFP)}" target="_blank" rel="noopener">WhatsApp</a>
           <a class="pill pill--ghost" href="/#portfolio">${P('back')}</a>
         </div>
       </div>

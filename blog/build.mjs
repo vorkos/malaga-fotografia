@@ -60,11 +60,13 @@ function fmtDate(d, lang = 'en') {
   });
 }
 
+/** Faces are self-hosted and @imported by blog.css (blog/tools/gen-fonts.py), so
+ *  no page links a third party. Only the two used above the fold are preloaded;
+ *  the rest arrive with the stylesheet. */
 const HEAD_FONTS = `
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">`;
+  <link rel="preload" href="/blog/assets/fonts/cormorant-garamond-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/blog/assets/fonts/archivo-400-latin.woff2" as="font" type="font/woff2" crossorigin>`;
 
 // --- per-post page ---------------------------------------------------------
 function renderPost(post) {

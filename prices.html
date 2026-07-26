@@ -5,18 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sesiones y tarifas — Málaga Fotografía</title>
 <meta name="description" content="Tarifas de sesiones de retrato y boudoir en Málaga desde 250€. Precios claros con galería privada editada. Portrait & boudoir session pricing in Málaga.">
-<link rel="canonical" href="https://malaga-fotografia.com/prices.html">
+<link rel="canonical" href="https://malaga-fotografia.com/prices">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Málaga Fotografía">
 <meta property="og:title" content="Sesiones y tarifas — Málaga Fotografía">
 <meta property="og:description" content="Tarifas de sesiones de retrato y boudoir en Málaga desde 250€. Precios claros con galería privada editada. Portrait & boudoir session pricing in Málaga.">
-<meta property="og:url" content="https://malaga-fotografia.com/prices.html">
+<meta property="og:url" content="https://malaga-fotografia.com/prices">
 <meta property="og:image" content="https://malaga-fotografia.com/gallery/barbara/Z52_0501.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="preload" href="/blog/assets/fonts/cormorant-garamond-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/blog/assets/fonts/archivo-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/blog/assets/blog.css">
 <link rel="stylesheet" href="/blog/assets/site.css">
 <script>(function(){try{var l=localStorage.getItem('mf_lang');if(!l){l=(navigator.language||'es').toLowerCase().indexOf('en')===0?'en':'es';}document.documentElement.lang=l;}catch(e){document.documentElement.lang='es';}})();</script>
@@ -26,14 +25,18 @@
   <a class="skip-link" href="#main"><span data-lang="en">Skip to content</span><span data-lang="es">Saltar al contenido</span></a>
   <header class="site-head">
     <a class="site-head__brand" href="/">Málaga Fotografía</a>
-    <nav class="site-head__nav" aria-label="Málaga Fotografía"><a href="/#portfolio"><span data-lang="en">Portfolio</span><span data-lang="es">Portfolio</span></a><a href="/blog/"><span data-lang="en">Journal</span><span data-lang="es">Diario</span></a><a href="/#tfp"><span data-lang="en">Collaborate</span><span data-lang="es">Colaborar</span></a><a href="/#process"><span data-lang="en">Process</span><span data-lang="es">Proceso</span></a><a href="/prices.html" aria-current="page"><span data-lang="en">Pricing</span><span data-lang="es">Precios</span></a><a href="/#contact"><span data-lang="en">Contact</span><span data-lang="es">Contacto</span></a></nav>
-    <div class="site-head__actions">
-      <a class="btn btn--primary site-head__apply" href="/apply/"><span data-lang="en">Apply</span><span data-lang="es">Aplicar</span></a>
+    <div class="site-head__panel" id="site-menu">
+      <nav class="site-head__nav" aria-label="Málaga Fotografía"><a href="/#portfolio"><span data-lang="en">Portfolio</span><span data-lang="es">Portfolio</span></a><a href="/blog/"><span data-lang="en">Journal</span><span data-lang="es">Diario</span></a><a href="/#tfp"><span data-lang="en">Collaborate</span><span data-lang="es">Colaborar</span></a><a href="/#process"><span data-lang="en">Process</span><span data-lang="es">Proceso</span></a><a href="/prices" aria-current="page"><span data-lang="en">Pricing</span><span data-lang="es">Precios</span></a><a href="/#contact"><span data-lang="en">Contact</span><span data-lang="es">Contacto</span></a></nav>
       <div class="langtoggle" role="group" aria-label="Language / Idioma">
-        <button type="button" class="langtoggle__btn" data-set-lang="es">ES</button>
-        <button type="button" class="langtoggle__btn" data-set-lang="en">EN</button>
+        <button type="button" class="langtoggle__btn" data-set-lang="es" aria-pressed="false">ES</button>
+        <button type="button" class="langtoggle__btn" data-set-lang="en" aria-pressed="false">EN</button>
       </div>
     </div>
+    <a class="btn btn--primary site-head__apply" href="/apply/"><span data-lang="en">Apply</span><span data-lang="es">Aplicar</span></a>
+    <button type="button" class="site-head__menu" aria-controls="site-menu" aria-expanded="false">
+      <span class="site-head__bars" aria-hidden="true"></span>
+      <span class="vh"><span data-lang="en">Menu</span><span data-lang="es">Menú</span></span>
+    </button>
   </header>
 
   <main id="main">
@@ -45,7 +48,7 @@
           <h1 class="display"><span data-lang="en">Sessions & pricing</span><span data-lang="es">Sesiones y tarifas</span></h1>
           <p class="price-hero__sub"><span data-lang="en">Clear pricing, no surprises. Every session includes posing guidance, a safe space and your private edited gallery.</span><span data-lang="es">Precios claros, sin sorpresas. Cada sesión incluye dirección de poses, un espacio seguro y tu galería privada editada.</span></p>
         </div>
-        <div class="price-hero__img mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/barbara/Z52_0501.avif"><source type="image/webp" srcset="/gallery/barbara/Z52_0501.webp"><img src="/gallery/barbara/Z52_0501.jpg" decoding="async" alt="Retrato boudoir · Boudoir portrait · Málaga"></picture></div>
+        <div class="price-hero__img mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/barbara/Z52_0501.avif"><source type="image/webp" srcset="/gallery/barbara/Z52_0501.webp"><img src="/gallery/barbara/Z52_0501.jpg" decoding="async" alt="Luz roja en franjas sobre el cuerpo, de pie junto a la persiana · Red striped light across the body, standing by the blind"></picture></div>
       </div>
     </section>
 
@@ -65,7 +68,7 @@
             <div class="point"><span><span data-lang="en">8 edited photos</span><span data-lang="es">8 fotos editadas</span></span></div>
             <div class="point"><span><span data-lang="en">Private online gallery</span><span data-lang="es">Galería privada online</span></span></div>
           </div>
-          <a class="pill pill--ghost" href="https://wa.me/34674474418" target="_blank" rel="noopener"><span data-lang="en">Book now</span><span data-lang="es">Reservar</span></a>
+          <a class="pill pill--ghost" href="https://wa.me/34674474418?text=Hola%20Kostya%2C%20me%20interesa%20la%20Mini%20sesi%C3%B3n%20(250%E2%82%AC)." target="_blank" rel="noopener"><span data-lang="en">Book now</span><span data-lang="es">Reservar</span></a>
         </div>
         <div class="tier tier--popular">
           <span class="tier__badge"><span data-lang="en">Most chosen</span><span data-lang="es">Más elegida</span></span>
@@ -80,7 +83,7 @@
             <div class="point"><span><span data-lang="en">Posing & styling help</span><span data-lang="es">Ayuda con poses y estilismo</span></span></div>
             <div class="point"><span><span data-lang="en">Private online gallery</span><span data-lang="es">Galería privada online</span></span></div>
           </div>
-          <a class="pill pill--primary" href="https://wa.me/34674474418" target="_blank" rel="noopener"><span data-lang="en">Book now</span><span data-lang="es">Reservar</span></a>
+          <a class="pill pill--primary" href="https://wa.me/34674474418?text=Hola%20Kostya%2C%20me%20interesa%20la%20Sesi%C3%B3n%20Signature%20(420%E2%82%AC)." target="_blank" rel="noopener"><span data-lang="en">Book now</span><span data-lang="es">Reservar</span></a>
         </div>
         <div class="tier">
           
@@ -95,7 +98,7 @@
             <div class="point"><span><span data-lang="en">Location or studio included</span><span data-lang="es">Localización o estudio incluido</span></span></div>
             <div class="point"><span><span data-lang="en">Makeup & hair styling</span><span data-lang="es">Maquillaje y peluquería</span></span></div>
           </div>
-          <a class="pill pill--ghost" href="https://wa.me/34674474418" target="_blank" rel="noopener"><span data-lang="en">Book now</span><span data-lang="es">Reservar</span></a>
+          <a class="pill pill--ghost" href="https://wa.me/34674474418?text=Hola%20Kostya%2C%20me%20interesa%20la%20Editorial%20Deluxe%20(650%E2%82%AC)." target="_blank" rel="noopener"><span data-lang="en">Book now</span><span data-lang="es">Reservar</span></a>
         </div>
         </div>
       </div>
@@ -139,11 +142,11 @@
     <!-- CTA -->
     <section class="section contact">
       <div class="contact__inner">
-        <div class="eyebrow eyebrow--center"><span class="eyebrow__label"><span data-lang="en">Booking</span><span data-lang="es">Reserva</span></span></div>
-        <h2 class="display"><span data-lang="en">Ready for your session?</span><span data-lang="es">¿Lista para tu sesión?</span></h2>
-        <p class="contact__sub"><span data-lang="en">Message me and we'll design the perfect session for you together.</span><span data-lang="es">Escríbeme y diseñamos juntos la sesión perfecta para ti.</span></p>
+        <div class="eyebrow eyebrow--center"><span class="eyebrow__label"><span data-lang="en">Contact</span><span data-lang="es">Contacto</span></span></div>
+        <h2 class="display"><span data-lang="en">Shall we talk?</span><span data-lang="es">¿Hablamos?</span></h2>
+        <p class="contact__sub"><span data-lang="en">Message me and we'll see what fits — a private session or a TFP collaboration.</span><span data-lang="es">Escríbeme y vemos qué encaja — sesión privada o colaboración TFP.</span></p>
         <div class="contact__actions">
-          <a class="pill pill--primary" href="https://wa.me/34674474418" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="pill pill--primary" href="https://wa.me/34674474418?text=Hola%20Kostya%2C%20me%20gustar%C3%ADa%20colaborar%20contigo%20en%20una%20sesi%C3%B3n%20TFP.%20Te%20cuento%20sobre%20m%C3%AD%3A" target="_blank" rel="noopener">WhatsApp</a>
           <a class="pill pill--ghost" href="/#portfolio"><span data-lang="en">View portfolio</span><span data-lang="es">Ver portfolio</span></a>
         </div>
       </div>

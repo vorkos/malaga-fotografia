@@ -27,17 +27,34 @@ export function bi(en, es) {
 /** Runs in <head> before paint: pick the language with no flash of the wrong one. */
 export const LANG_BOOT = `<script>(function(){try{var l=localStorage.getItem('mf_lang');if(!l){l=(navigator.language||'es').toLowerCase().indexOf('en')===0?'en':'es';}document.documentElement.lang=l;}catch(e){document.documentElement.lang='es';}})();</script>`;
 
+/** Pricing is `/prices`, NOT `/prices.html`: Cloudflare Assets strips the
+ *  extension and 307s `/prices.html` -> `/prices`, so linking the .html made
+ *  every Pricing click pay a redirect and pointed the canonical at a URL that
+ *  redirects away from itself. */
 const NAV = [
   { href: '/#portfolio', en: 'Portfolio', es: 'Portfolio', key: 'portfolio' },
   { href: '/blog/', en: 'Journal', es: 'Diario', key: 'journal' },
   { href: '/#tfp', en: 'Collaborate', es: 'Colaborar', key: 'tfp' },
   { href: '/#process', en: 'Process', es: 'Proceso', key: 'process' },
-  { href: '/prices.html', en: 'Pricing', es: 'Precios', key: 'pricing' },
+  { href: '/prices', en: 'Pricing', es: 'Precios', key: 'pricing' },
   { href: '/#contact', en: 'Contact', es: 'Contacto', key: 'contact' },
 ];
 
 /**
  * Shared sticky header.
+ *
+ * Layout note: `.site-head__panel` is `display:contents` on desktop, so the nav
+ * and the language toggle lay out as if it weren't there — brand | nav | Apply |
+ * ES·EN on one row, ordered by `order` in blog.css. Below 720px the panel
+ * becomes a real box that collapses behind the menu button. Wrapping them gives
+ * the button a single `aria-controls` target while leaving the desktop row
+ * untouched.
+ *
+ * The toggle buttons ship `aria-pressed="false"`; chrome.js corrects the active
+ * one on load. The *visual* active state is CSS off `html[lang]`, which is set
+ * pre-paint by LANG_BOOT, so there is no flash — only the announced state waits
+ * for JS.
+ *
  * @param {string} active  nav key to mark aria-current (or '')
  */
 export function siteHeader(active = '') {
@@ -48,14 +65,18 @@ export function siteHeader(active = '') {
   return `  <a class="skip-link" href="#main">${bi('Skip to content', 'Saltar al contenido')}</a>
   <header class="site-head">
     <a class="site-head__brand" href="/">${BRAND}</a>
-    <nav class="site-head__nav" aria-label="Málaga Fotografía">${links}</nav>
-    <div class="site-head__actions">
-      <a class="btn btn--primary site-head__apply" href="/apply/">${bi('Apply', 'Aplicar')}</a>
+    <div class="site-head__panel" id="site-menu">
+      <nav class="site-head__nav" aria-label="${BRAND}">${links}</nav>
       <div class="langtoggle" role="group" aria-label="Language / Idioma">
-        <button type="button" class="langtoggle__btn" data-set-lang="es">ES</button>
-        <button type="button" class="langtoggle__btn" data-set-lang="en">EN</button>
+        <button type="button" class="langtoggle__btn" data-set-lang="es" aria-pressed="false">ES</button>
+        <button type="button" class="langtoggle__btn" data-set-lang="en" aria-pressed="false">EN</button>
       </div>
     </div>
+    <a class="btn btn--primary site-head__apply" href="/apply/">${bi('Apply', 'Aplicar')}</a>
+    <button type="button" class="site-head__menu" aria-controls="site-menu" aria-expanded="false">
+      <span class="site-head__bars" aria-hidden="true"></span>
+      <span class="vh">${bi('Menu', 'Menú')}</span>
+    </button>
   </header>`;
 }
 

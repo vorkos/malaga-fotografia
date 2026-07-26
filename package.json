@@ -5,12 +5,15 @@
   "scripts": {
     "build:blog": "node blog/build.mjs",
     "build:site": "node blog/build-site.mjs",
-    "build": "node blog/build-site.mjs && node blog/build.mjs",
+    "build:apply": "node blog/build-apply.mjs",
+    "build": "node blog/build-site.mjs && node blog/build.mjs && node blog/build-apply.mjs",
     "pick": "node blog/tools/pick.mjs",
     "pick-r2": "node blog/tools/pick-r2.mjs",
     "models": "node blog/tools/pick-r2.mjs --list",
     "variants": "python blog/tools/gen-variants.py",
-    "dims": "python blog/tools/gen-dims.py"
+    "dims": "python blog/tools/gen-dims.py",
+    "thumbs": "python blog/tools/gen-thumbs.py",
+    "fonts": "python blog/tools/gen-fonts.py"
   },
   "devDependencies": {
     "gray-matter": "^4.0.3",

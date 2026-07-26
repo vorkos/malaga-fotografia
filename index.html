@@ -14,9 +14,8 @@
 <meta property="og:image" content="https://malaga-fotografia.com/gallery/barbara/Z52_0461-small.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="preload" href="/blog/assets/fonts/cormorant-garamond-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/blog/assets/fonts/archivo-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/blog/assets/blog.css">
 <link rel="stylesheet" href="/blog/assets/site.css">
 <link rel="stylesheet" href="/blog/assets/vendor/photoswipe/photoswipe.css">
@@ -28,14 +27,18 @@
   <a class="skip-link" href="#main"><span data-lang="en">Skip to content</span><span data-lang="es">Saltar al contenido</span></a>
   <header class="site-head">
     <a class="site-head__brand" href="/">Málaga Fotografía</a>
-    <nav class="site-head__nav" aria-label="Málaga Fotografía"><a href="/#portfolio" aria-current="page"><span data-lang="en">Portfolio</span><span data-lang="es">Portfolio</span></a><a href="/blog/"><span data-lang="en">Journal</span><span data-lang="es">Diario</span></a><a href="/#tfp"><span data-lang="en">Collaborate</span><span data-lang="es">Colaborar</span></a><a href="/#process"><span data-lang="en">Process</span><span data-lang="es">Proceso</span></a><a href="/prices.html"><span data-lang="en">Pricing</span><span data-lang="es">Precios</span></a><a href="/#contact"><span data-lang="en">Contact</span><span data-lang="es">Contacto</span></a></nav>
-    <div class="site-head__actions">
-      <a class="btn btn--primary site-head__apply" href="/apply/"><span data-lang="en">Apply</span><span data-lang="es">Aplicar</span></a>
+    <div class="site-head__panel" id="site-menu">
+      <nav class="site-head__nav" aria-label="Málaga Fotografía"><a href="/#portfolio" aria-current="page"><span data-lang="en">Portfolio</span><span data-lang="es">Portfolio</span></a><a href="/blog/"><span data-lang="en">Journal</span><span data-lang="es">Diario</span></a><a href="/#tfp"><span data-lang="en">Collaborate</span><span data-lang="es">Colaborar</span></a><a href="/#process"><span data-lang="en">Process</span><span data-lang="es">Proceso</span></a><a href="/prices"><span data-lang="en">Pricing</span><span data-lang="es">Precios</span></a><a href="/#contact"><span data-lang="en">Contact</span><span data-lang="es">Contacto</span></a></nav>
       <div class="langtoggle" role="group" aria-label="Language / Idioma">
-        <button type="button" class="langtoggle__btn" data-set-lang="es">ES</button>
-        <button type="button" class="langtoggle__btn" data-set-lang="en">EN</button>
+        <button type="button" class="langtoggle__btn" data-set-lang="es" aria-pressed="false">ES</button>
+        <button type="button" class="langtoggle__btn" data-set-lang="en" aria-pressed="false">EN</button>
       </div>
     </div>
+    <a class="btn btn--primary site-head__apply" href="/apply/"><span data-lang="en">Apply</span><span data-lang="es">Aplicar</span></a>
+    <button type="button" class="site-head__menu" aria-controls="site-menu" aria-expanded="false">
+      <span class="site-head__bars" aria-hidden="true"></span>
+      <span class="vh"><span data-lang="en">Menu</span><span data-lang="es">Menú</span></span>
+    </button>
   </header>
 
   <main id="main">
@@ -60,7 +63,7 @@
           <p class="about__lead"><span data-lang="en">You don't need to be a model — you just need to be you. I create intimate portraits that capture your unique beauty in a relaxed setting, guiding you every step so the photos come out natural and beautiful.</span><span data-lang="es">No necesitas ser modelo — solo necesitas ser tú. Creo retratos íntimos que capturan tu belleza única en un ambiente relajado, guiándote en cada paso para que las fotos salgan naturales y hermosas.</span></p>
           <div class="about__promise"><p><span data-lang="en">A 100% confidential and professional space. You set the limits; I take care of the rest.</span><span data-lang="es">Un espacio 100% confidencial y profesional. Tú decides los límites; yo me encargo del resto.</span></p></div>
         </div>
-        <div class="about__img mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/barbara/Z52_0569.avif"><source type="image/webp" srcset="/gallery/barbara/Z52_0569.webp"><img src="/gallery/barbara/Z52_0569.jpg" decoding="async" alt="Retrato · Portrait · Málaga Fotografía"></picture></div>
+        <div class="about__img mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/barbara/Z52_0569.avif"><source type="image/webp" srcset="/gallery/barbara/Z52_0569.webp"><img src="/gallery/barbara/Z52_0569.jpg" decoding="async" alt="De pie junto a la persiana, sombras en franjas sobre el cuerpo · Standing by a blind, striped shadows across the body"></picture></div>
       </div>
     </section>
 
@@ -74,46 +77,46 @@
         </div>
         <div class="gallery__grid">
         <a class="gallery__item" href="/gallery/mariia/Z52_0012-small.jpg" data-pswp-width="1080" data-pswp-height="1620" target="_blank" rel="noopener">
-          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/mariia/Z52_0012-small.avif"><source type="image/webp" srcset="/gallery/mariia/Z52_0012-small.webp"><img src="/gallery/mariia/Z52_0012-small.jpg" decoding="async" alt="Fotografía de retrato de autor · Fine-art portrait · Málaga"></picture></div>
+          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/mariia/Z52_0012-small.avif"><source type="image/webp" srcset="/gallery/mariia/Z52_0012-small.webp"><img src="/gallery/mariia/Z52_0012-small.jpg" decoding="async" alt="Desnudo artístico sentada en una ventana abierta, brazo alzado al marco, tejados al fondo · Fine-art nude seated in an open window, arm raised to the frame, rooftops beyond"></picture></div>
         </a>
         <a class="gallery__item" href="/gallery/lilly/Z52_0147-small.jpg" data-pswp-width="1080" data-pswp-height="1620" target="_blank" rel="noopener">
-          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/lilly/Z52_0147-small.avif"><source type="image/webp" srcset="/gallery/lilly/Z52_0147-small.webp"><img src="/gallery/lilly/Z52_0147-small.jpg" decoding="async" alt="Fotografía de retrato de autor · Fine-art portrait · Málaga"></picture></div>
+          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/lilly/Z52_0147-small.avif"><source type="image/webp" srcset="/gallery/lilly/Z52_0147-small.webp"><img src="/gallery/lilly/Z52_0147-small.jpg" decoding="async" alt="Desnudo artístico entre las ramas de un árbol, brazos en alto y hojas a contraluz · Fine-art nude in the fork of a tree, arms raised into backlit leaves"></picture></div>
         </a>
         <a class="gallery__item" href="/gallery/iryna/Z52_0598-small.jpg" data-pswp-width="1080" data-pswp-height="1620" target="_blank" rel="noopener">
-          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/iryna/Z52_0598-small.avif"><source type="image/webp" srcset="/gallery/iryna/Z52_0598-small.webp"><img src="/gallery/iryna/Z52_0598-small.jpg" loading="lazy" decoding="async" alt="Fotografía de retrato de autor · Fine-art portrait · Málaga"></picture></div>
+          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/iryna/Z52_0598-small.avif"><source type="image/webp" srcset="/gallery/iryna/Z52_0598-small.webp"><img src="/gallery/iryna/Z52_0598-small.jpg" decoding="async" alt="Desnudo en blanco y negro, torso arqueado en contrapicado y trenza sobre el hombro · Black-and-white nude, arched torso from a low angle, braid over the shoulder"></picture></div>
         </a>
         <a class="gallery__item" href="/gallery/nataliia/Z52_9094-small.jpg" data-pswp-width="1080" data-pswp-height="1620" target="_blank" rel="noopener">
-          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/nataliia/Z52_9094-small.avif"><source type="image/webp" srcset="/gallery/nataliia/Z52_9094-small.webp"><img src="/gallery/nataliia/Z52_9094-small.jpg" loading="lazy" decoding="async" alt="Fotografía de retrato de autor · Fine-art portrait · Málaga"></picture></div>
+          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/nataliia/Z52_9094-small.avif"><source type="image/webp" srcset="/gallery/nataliia/Z52_9094-small.webp"><img src="/gallery/nataliia/Z52_9094-small.jpg" decoding="async" alt="Desnudo de espaldas en un balcón, cabeza vuelta sobre el hombro, en tono sepia · Nude from behind on a balcony, head turned over the shoulder, warm sepia"></picture></div>
         </a>
         <a class="gallery__item gallery__item--wide" href="/gallery/barbara/Z52_0383.jpg" data-pswp-width="1080" data-pswp-height="720" target="_blank" rel="noopener">
-          <div class="mat mat--wide"><picture><source type="image/avif" srcset="/gallery/barbara/Z52_0383.avif"><source type="image/webp" srcset="/gallery/barbara/Z52_0383.webp"><img src="/gallery/barbara/Z52_0383.jpg" loading="lazy" decoding="async" alt="Fotografía de retrato de autor · Fine-art portrait · Málaga"></picture></div>
+          <div class="mat mat--wide"><picture><source type="image/avif" srcset="/gallery/barbara/Z52_0383.avif"><source type="image/webp" srcset="/gallery/barbara/Z52_0383.webp"><img src="/gallery/barbara/Z52_0383.jpg" loading="lazy" decoding="async" alt="Cenital sobre la cama en vestido azul, luz moteada en círculos · Overhead on a bed in a blue dress, dappled circles of light"></picture></div>
         </a>
         <a class="gallery__item" href="/gallery/mariia/Z52_0887-small.jpg" data-pswp-width="1080" data-pswp-height="1620" target="_blank" rel="noopener">
-          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/mariia/Z52_0887-small.avif"><source type="image/webp" srcset="/gallery/mariia/Z52_0887-small.webp"><img src="/gallery/mariia/Z52_0887-small.jpg" loading="lazy" decoding="async" alt="Fotografía de retrato de autor · Fine-art portrait · Málaga"></picture></div>
+          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/mariia/Z52_0887-small.avif"><source type="image/webp" srcset="/gallery/mariia/Z52_0887-small.webp"><img src="/gallery/mariia/Z52_0887-small.jpg" loading="lazy" decoding="async" alt="Retrato en penumbra junto a la ventana, mirada baja y sonrisa contenida · Soft window-light portrait, gaze lowered, a held smile"></picture></div>
         </a>
         <a class="gallery__item" href="/gallery/vika/Z52_1917-small.jpg" data-pswp-width="1080" data-pswp-height="1620" target="_blank" rel="noopener">
-          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/vika/Z52_1917-small.avif"><source type="image/webp" srcset="/gallery/vika/Z52_1917-small.webp"><img src="/gallery/vika/Z52_1917-small.jpg" loading="lazy" decoding="async" alt="Fotografía de retrato de autor · Fine-art portrait · Málaga"></picture></div>
+          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/vika/Z52_1917-small.avif"><source type="image/webp" srcset="/gallery/vika/Z52_1917-small.webp"><img src="/gallery/vika/Z52_1917-small.jpg" loading="lazy" decoding="async" alt="De rodillas sobre la cama quitándose una camiseta, vidriera y espejo al fondo · Kneeling on a bed lifting a white top overhead, stained glass and mirror behind"></picture></div>
         </a>
         <a class="gallery__item" href="/gallery/iryna/Z52_0537-small.jpg" data-pswp-width="1080" data-pswp-height="1620" target="_blank" rel="noopener">
-          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/iryna/Z52_0537-small.avif"><source type="image/webp" srcset="/gallery/iryna/Z52_0537-small.webp"><img src="/gallery/iryna/Z52_0537-small.jpg" loading="lazy" decoding="async" alt="Fotografía de retrato de autor · Fine-art portrait · Málaga"></picture></div>
+          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/iryna/Z52_0537-small.avif"><source type="image/webp" srcset="/gallery/iryna/Z52_0537-small.webp"><img src="/gallery/iryna/Z52_0537-small.jpg" loading="lazy" decoding="async" alt="Desnudo en blanco y negro junto a una puerta, mirada directa a cámara · High-contrast black-and-white nude beside a doorway, looking straight to camera"></picture></div>
         </a>
         <a class="gallery__item" href="/gallery/barbara/Z52_0470-small.jpg" data-pswp-width="1080" data-pswp-height="1620" target="_blank" rel="noopener">
-          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/barbara/Z52_0470-small.avif"><source type="image/webp" srcset="/gallery/barbara/Z52_0470-small.webp"><img src="/gallery/barbara/Z52_0470-small.jpg" loading="lazy" decoding="async" alt="Fotografía de retrato de autor · Fine-art portrait · Málaga"></picture></div>
+          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/barbara/Z52_0470-small.avif"><source type="image/webp" srcset="/gallery/barbara/Z52_0470-small.webp"><img src="/gallery/barbara/Z52_0470-small.jpg" loading="lazy" decoding="async" alt="Boudoir en vestido azul sobre la cama, luz roja de persiana y mano alzada · Boudoir in a blue slip on a bed, red blind-light, hand raised"></picture></div>
         </a>
         <a class="gallery__item" href="/gallery/nataliia/Z52_9385-small.jpg" data-pswp-width="1080" data-pswp-height="1620" target="_blank" rel="noopener">
-          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/nataliia/Z52_9385-small.avif"><source type="image/webp" srcset="/gallery/nataliia/Z52_9385-small.webp"><img src="/gallery/nataliia/Z52_9385-small.jpg" loading="lazy" decoding="async" alt="Fotografía de retrato de autor · Fine-art portrait · Málaga"></picture></div>
+          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/nataliia/Z52_9385-small.avif"><source type="image/webp" srcset="/gallery/nataliia/Z52_9385-small.webp"><img src="/gallery/nataliia/Z52_9385-small.jpg" loading="lazy" decoding="async" alt="Camisa blanca abierta sobre un sofá, pared en degradado rosa y azul · Open white shirt on a sofa against a pink-and-blue gradient wall"></picture></div>
         </a>
         <a class="gallery__item" href="/gallery/lilly/Z52_8323-small.jpg" data-pswp-width="1080" data-pswp-height="1620" target="_blank" rel="noopener">
-          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/lilly/Z52_8323-small.avif"><source type="image/webp" srcset="/gallery/lilly/Z52_8323-small.webp"><img src="/gallery/lilly/Z52_8323-small.jpg" loading="lazy" decoding="async" alt="Fotografía de retrato de autor · Fine-art portrait · Málaga"></picture></div>
+          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/lilly/Z52_8323-small.avif"><source type="image/webp" srcset="/gallery/lilly/Z52_8323-small.webp"><img src="/gallery/lilly/Z52_8323-small.jpg" loading="lazy" decoding="async" alt="Torso de perfil en primer plano, tatuaje floral y luz suave · Close profile of the torso, floral tattoo, soft light"></picture></div>
         </a>
         <a class="gallery__item gallery__item--wide" href="/gallery/barbara/Z52_0461.jpg" data-pswp-width="1080" data-pswp-height="720" target="_blank" rel="noopener">
-          <div class="mat mat--wide"><picture><source type="image/avif" srcset="/gallery/barbara/Z52_0461.avif"><source type="image/webp" srcset="/gallery/barbara/Z52_0461.webp"><img src="/gallery/barbara/Z52_0461.jpg" loading="lazy" decoding="async" alt="Fotografía de retrato de autor · Fine-art portrait · Málaga"></picture></div>
+          <div class="mat mat--wide"><picture><source type="image/avif" srcset="/gallery/barbara/Z52_0461.avif"><source type="image/webp" srcset="/gallery/barbara/Z52_0461.webp"><img src="/gallery/barbara/Z52_0461.jpg" loading="lazy" decoding="async" alt="Tumbada en sábanas blancas con vestido azul, dentro de un círculo de luz · Lying on white sheets in a blue dress, inside a circle of light"></picture></div>
         </a>
         <a class="gallery__item" href="/gallery/vika/Z52_2867-small.jpg" data-pswp-width="1080" data-pswp-height="1620" target="_blank" rel="noopener">
-          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/vika/Z52_2867-small.avif"><source type="image/webp" srcset="/gallery/vika/Z52_2867-small.webp"><img src="/gallery/vika/Z52_2867-small.jpg" loading="lazy" decoding="async" alt="Fotografía de retrato de autor · Fine-art portrait · Málaga"></picture></div>
+          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/vika/Z52_2867-small.avif"><source type="image/webp" srcset="/gallery/vika/Z52_2867-small.webp"><img src="/gallery/vika/Z52_2867-small.jpg" loading="lazy" decoding="async" alt="Desnudo bañado en luz roja contra la pared, brazos tras la cabeza · Nude in deep red light against a wall, arms behind the head"></picture></div>
         </a>
-        <a class="gallery__item" href="/gallery/mariia/Z52_9264-small.jpg" data-pswp-width="1080" data-pswp-height="720" target="_blank" rel="noopener">
-          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/mariia/Z52_9264-small.avif"><source type="image/webp" srcset="/gallery/mariia/Z52_9264-small.webp"><img src="/gallery/mariia/Z52_9264-small.jpg" loading="lazy" decoding="async" alt="Fotografía de retrato de autor · Fine-art portrait · Málaga"></picture></div>
+        <a class="gallery__item" href="/gallery/mariia/Z52_9416-small.jpg" data-pswp-width="1080" data-pswp-height="1620" target="_blank" rel="noopener">
+          <div class="mat mat--portrait"><picture><source type="image/avif" srcset="/gallery/mariia/Z52_9416-small.avif"><source type="image/webp" srcset="/gallery/mariia/Z52_9416-small.webp"><img src="/gallery/mariia/Z52_9416-small.jpg" loading="lazy" decoding="async" alt="Sentada en la cama abrazándose las rodillas, plantas y luz natural de la ventana · Seated on a bed, arms wrapped round her knees, plants and natural window light"></picture></div>
         </a>
         </div>
       </div>
@@ -184,10 +187,10 @@
         <p class="contact__sub"><span data-lang="en">No commitment — ask me anything, or apply to collaborate.</span><span data-lang="es">Sin compromiso — pregunta lo que quieras, o aplica para colaborar.</span></p>
         <div class="contact__actions">
           <a class="pill pill--primary" href="/apply/"><span data-lang="en">Apply to collaborate</span><span data-lang="es">Aplica para colaborar</span></a>
-          <a class="pill pill--ghost" href="https://wa.me/34674474418" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="pill pill--ghost" href="https://wa.me/34674474418?text=Hola%20Kostya%2C%20me%20gustar%C3%ADa%20colaborar%20contigo%20en%20una%20sesi%C3%B3n%20TFP.%20Te%20cuento%20sobre%20m%C3%AD%3A" target="_blank" rel="noopener">WhatsApp</a>
           <a class="pill pill--ghost" href="https://instagram.com/ph.kostiantyn.v" target="_blank" rel="noopener">Instagram</a>
         </div>
-        <p class="contact__note"><span data-lang="en">Prefer a private paid session? Sessions from €250 —</span><span data-lang="es">¿Prefieres una sesión privada de pago? Sesiones desde 250€ —</span> <a href="/prices.html"><span data-lang="en">see pricing</span><span data-lang="es">consulta tarifas</span></a></p>
+        <p class="contact__note"><span data-lang="en">Prefer a private paid session? Sessions from €250 —</span><span data-lang="es">¿Prefieres una sesión privada de pago? Sesiones desde 250€ —</span> <a href="/prices"><span data-lang="en">see pricing</span><span data-lang="es">consulta tarifas</span></a></p>
       </div>
     </section>
   </main>

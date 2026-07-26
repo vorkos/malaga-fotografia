@@ -1,21 +1,48 @@
+# Files under the repo root that must NOT be uploaded as public assets.
+# `wrangler.jsonc` sets assets.directory to "." — the whole repo — so anything
+# not listed here is served at https://malaga-fotografia.com/<path>.
+#
+# Wrangler already excludes .git, node_modules, .wrangler and .dev.vars* on its
+# own (verified 2026-07-26: /.dev.vars 404s). Everything else is listed here.
+
+# --- worker + config ---
 _worker.js
 wrangler.jsonc
 .gitignore
+.gitattributes
 .assetsignore
+package.json
+package-lock.json
+README.md
+node_modules
+
+# --- sources and build tooling (only the built pages ship) ---
 src
 .agent
-photo-grid.jpeg
+.claude
+blog/build.mjs
+blog/build-site.mjs
+blog/build-apply.mjs
+blog/lib
+blog/content
+blog/tools
+blog/gallery-dims.json
+blog/gallery-thumbs.json
+
+# --- one-off scripts and working notes ---
 fix_slots.py
 check_slots.py
 update_gallery.py
 rate.html
 orientations.txt
-README.md
-node_modules
-package.json
-package-lock.json
-blog/build.mjs
-blog/build-site.mjs
-blog/lib
-blog/content
-blog/tools
+
+# --- screenshots and scratch. These were absent from the live site only
+#     because they are untracked and deploys run from a clean checkout; a
+#     local `wrangler deploy` would have published ~1.2 MB of them. ---
+photo-grid.jpeg
+gallery-page1.jpeg
+gallery-page2.jpeg
+gallery-page3.jpeg
+rate-tool.jpeg
+rate2-tool.jpeg
+.playwright-mcp
