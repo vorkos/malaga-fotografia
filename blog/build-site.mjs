@@ -14,13 +14,20 @@
  *
  * Run: `npm run build:site`  (Node 18+, no deps beyond chrome.mjs)
  */
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { bi, siteHeader, siteFooter, LANG_BOOT, BRAND, SITE } from './lib/chrome.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..'); // repo root — where index.html/prices.html live
+
+/** Real pixel size of every lightbox photo, measured from the files themselves
+ *  by `python blog/tools/gen-dims.py`. Not a guess: PhotoSwipe lays its viewer
+ *  out from these *before* the image loads, so a wrong ratio stretches the
+ *  photo and overflows the viewport. The grid's tidy 4:5 crop is a CSS
+ *  `object-fit: cover` on the thumbnail and says nothing about the file. */
+const DIMS = JSON.parse(readFileSync(join(__dirname, 'gallery-dims.json'), 'utf8'));
 
 const G = (p) => `/gallery/${p}`; // R2 path helper
 
@@ -82,10 +89,25 @@ function galleryItem(path, kind, i) {
   const wide = kind === 'wide';
   const eager = i < 2 ? '' : ' loading="lazy"';
   // <a> + data-pswp-* drives the PhotoSwipe lightbox (site.js); with JS off the
-  // link just opens the image. Dims are orientation approximations (real files
-  // are cover-cropped to these ratios) — enough for PhotoSwipe's fit/zoom.
-  const w = wide ? 1500 : 1200;
-  const h = wide ? 1000 : 1500;
+  // link just opens the image. These must be the FILE's real dimensions — the
+  // mat's 4:5 is a CSS crop of the thumbnail only, and the lightbox shows the
+  // whole file.
+  const dim = DIMS[path];
+  if (!dim) {
+    throw new Error(
+      `no measured size for gallery photo "${path}".\n` +
+      `Run: python blog/tools/gen-dims.py    (then rebuild)`);
+  }
+  const [w, h] = dim;
+  // The grid's mat is chosen by hand (the 4-col rhythm below); if a photo's
+  // real orientation disagrees, the thumbnail is cropped to nothing and the
+  // layout lies about what you're clicking.
+  if ((w > h) !== wide) {
+    console.warn(
+      `  ! ${path} is ${w > h ? 'landscape' : 'portrait'} (${w}x${h}) but is ` +
+      `laid out as ${wide ? 'wide' : 'portrait'} — move it between ` +
+      `PORTRAITS and WIDES, or swap it out.`);
+  }
   return `        <a class="gallery__item${wide ? ' gallery__item--wide' : ''}" href="${G(path)}" data-pswp-width="${w}" data-pswp-height="${h}" target="_blank" rel="noopener">
           <div class="mat mat--${wide ? 'wide' : 'portrait'}">${pic(path, alt, eager)}</div>
         </a>`;

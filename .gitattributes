@@ -1,0 +1,22 @@
+# Line endings are decided here, not by whatever `core.autocrlf` happens to be
+# on the machine you cloned onto.
+#
+# Every file in this repo's index is LF and always has been. The build tools
+# (blog/build-site.mjs, blog/build.mjs) write LF too. With core.autocrlf=true
+# and no rules, git wanted the working tree to be CRLF instead, so every build
+# produced "LF will be replaced by CRLF the next time Git touches it" and the
+# tree drifted into a mix (31 LF / 14 CRLF / 1 mixed as of 2026-07-26).
+#
+# Pinning eol=lf changes no content -- the index was already LF -- it just
+# stops git and the generators disagreeing.
+* text=auto eol=lf
+
+# Never touch photos or fonts.
+*.jpg   binary
+*.jpeg  binary
+*.png   binary
+*.webp  binary
+*.avif  binary
+*.ico   binary
+*.woff  binary
+*.woff2 binary

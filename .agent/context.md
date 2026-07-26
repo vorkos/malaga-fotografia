@@ -91,6 +91,31 @@ When moving photos between slots, always replace the **source slot first** (to r
 
 ## Gallery Architecture
 
+### Lightbox dimensions — do not guess them (fixed 2026-07-26)
+
+The homepage grid crops thumbnails to a tidy ratio **in CSS**
+(`.mat--portrait img { aspect-ratio: 4/5; object-fit: cover }`). The PhotoSwipe
+lightbox opens the **file**, which is a different shape — the portraits are
+1080×1620 (2:3), not 4:5, and one was landscape entirely.
+
+`build-site.mjs` used to hardcode `1200×1500` for every portrait and
+`1500×1000` for every wide, with a comment claiming "real files are
+cover-cropped to these ratios". They are not — that comment mistook the CSS
+crop for the file. PhotoSwipe lays out from `data-pswp-width/height` *before*
+the image loads and its `.pswp__img` is `object-fit: fill`, so **every photo in
+the lightbox was stretched**: portraits 20% too wide, and `Z52_9264-small.jpg`
+(landscape, 1080×720) squeezed into a portrait box at half its correct width.
+
+Now: `blog/gallery-dims.json` holds each file's measured size, written by
+`npm run dims` (downloads from the live site, reads with Pillow; needs a
+browser User-Agent or Cloudflare 403s). `build-site.mjs` reads it and **throws**
+if a photo is missing, so a new photo cannot inherit a wrong guess. It also
+warns when a photo's real orientation disagrees with the PORTRAITS/WIDES bucket
+it was placed in.
+
+**After adding or rotating a displayed photo:** `npm run dims && npm run build`.
+`npm run dims -- --check` verifies without writing.
+
 - **3 pages** in a horizontal carousel (scroll-snap, auto-advances every 4.5 s, pauses on hover)
 - Each page: **4 vertical (4:5 aspect) + 2 horizontal (3:2 aspect)** = 18 slots total
 - Photos served from R2 via Worker at `/gallery/FILENAME`
