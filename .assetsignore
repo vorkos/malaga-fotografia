@@ -2,14 +2,24 @@
 # `wrangler.jsonc` sets assets.directory to "." — the whole repo — so anything
 # not listed here is served at https://malaga-fotografia.com/<path>.
 #
-# Wrangler already excludes .git, node_modules, .wrangler and .dev.vars* on its
-# own (verified 2026-07-26: /.dev.vars 404s). Everything else is listed here.
+# Assume NOTHING is excluded for you. Wrangler skips `.dev.vars*` and
+# `node_modules`, but it does NOT skip dotfiles in general: until 2026-07-26 the
+# entire `.git` directory was live, so `curl https://malaga-fotografia.com/.git/
+# config` returned 200 and the whole repository — every commit, every branch —
+# could be reconstructed by anyone. The Workers Builds log lists each uploaded
+# path; read it after changing this file rather than trusting a spot check.
+
+# --- version control and build scratch: NEVER public ---
+.git
+.gitignore
+.gitattributes
+.wrangler
+.dev.vars
+.dev.vars.example
 
 # --- worker + config ---
 _worker.js
 wrangler.jsonc
-.gitignore
-.gitattributes
 .assetsignore
 package.json
 package-lock.json
